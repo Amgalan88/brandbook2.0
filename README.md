@@ -2,18 +2,25 @@
 
 Брэндийн нэгдсэн хэрэглээний зааврын вэб хувилбар: лого, өнгө, фонт, Facebook стандарт, хаяг, хувцас, тээвэр, салбарын заавар, пост үүсгэгч, татах файлууд.
 
-## Вэб болгох (GitHub Pages)
+## Вэб болгох (Vercel, нэвтрэх кодтой)
 
-1. Repo → **Settings** → **Pages**
-2. **Source:** Deploy from a branch
-3. **Branch:** `main`, хавтас `/ (root)` → **Save**
-4. 1–2 минутын дараа хаяг гарна: `https://amgalan88.github.io/brandbook2.0/`
+1. [vercel.com/new](https://vercel.com/new) → энэ repo-г **Import**
+2. **Framework Preset:** Other. Build Command, Output Directory-г хоосон үлдээнэ → **Deploy**
+3. Сайт нээгдэхэд эхлээд нэвтрэх код асууна. Код зөв бол 30 хоног дахин асуухгүй.
+
+Код шалгах ажлыг `middleware.js` (Vercel Routing Middleware) сервер талд хийдэг. Тиймээс хуудас, зураг, видео, PDF аль нь ч код оруулахгүйгээр нээгдэхгүй. Анхны код нь `BB0808`.
+
+- **Код солих:** Vercel → Project → **Settings → Environment Variables** → `BRANDBOOK_CODE` = шинэ код → **Redeploy**. Код солиход өмнө нэвтэрсэн бүх хүнээс дахин асууна.
+- **Гарах:** `/__lock` хаягаар орно.
+
+> GitHub Pages дээр middleware ажилладаггүй тул тэнд код асуухгүй. Мөн repo public байвал GitHub дээрээс файлууд нээлттэй харагдана.
 
 ## Бүтэц
 
 | Файл | Агуулга |
 |---|---|
 | `index.html` | Вэб хуудас бүхэлдээ (фонт, лого, загвар үүсгэгч дотроо) |
+| `middleware.js` | Нэвтрэх кодын хуудас ба шалгалт (Vercel) |
 | `brandbook.pdf` | Брэндбүүк 2.0 · 104 хуудас |
 | `img/` | Загварын зураг, mockup, гэрэл зураг |
 | `video/` | Хөдөлгөөнт лого (16:9, 9:16) |

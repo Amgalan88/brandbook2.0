@@ -1,0 +1,8 @@
+{
+  "name": "brandbook2.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@vercel/functions": "^3.9.11"
+  }
+}
