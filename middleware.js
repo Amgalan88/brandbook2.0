@@ -6,6 +6,15 @@ import { next } from '@vercel/functions';
 const CODE = (process.env.BRANDBOOK_CODE || 'BB0808').trim().toUpperCase();
 const COOKIE = 'bb_pass';
 const MAX_AGE = 60 * 60 * 24 * 30; // 30 хоног
+// bb_in: хуудсанд "Гарах" товч харуулах тэмдэг (код биш, JS уншиж болно)
+const HINT = 'bb_in';
+
+function cookies(token, maxAge) {
+  const h = new Headers();
+  h.append('set-cookie', `${COOKIE}=${token}; Path=/; Max-Age=${maxAge}; HttpOnly; Secure; SameSite=Lax`);
+  h.append('set-cookie', `${HINT}=${maxAge ? 1 : ''}; Path=/; Max-Age=${maxAge}; Secure; SameSite=Lax`);
+  return h;
+}
 
 async function tokenFor(code) {
   const data = new TextEncoder().encode('brandbook2.0:' + code);
@@ -107,24 +116,23 @@ export default async function middleware(request) {
       await new Promise((r) => setTimeout(r, 700)); // таах оролдлогыг удаашруулна
       return gatePage(nextPath, true);
     }
-    return new Response(null, {
-      status: 303,
-      headers: {
-        location: nextPath,
-        'cache-control': 'no-store',
-        'set-cookie': `${COOKIE}=${token}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax`,
-      },
-    });
+    const headers = cookies(token, MAX_AGE);
+    headers.set('location', nextPath);
+    headers.set('cache-control', 'no-store');
+    return new Response(null, { status: 303, headers });
   }
 
   if (url.pathname === '/__lock') {
-    return new Response(null, {
-      status: 303,
-      headers: { location: '/', 'set-cookie': `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax` },
-    });
+    const headers = cookies('', 0);
+    headers.set('location', '/');
+    headers.set('cache-control', 'no-store');
+    return new Response(null, { status: 303, headers });
   }
 
-  if (readCookie(request, COOKIE) === token) return next();
+  if (readCookie(request, COOKIE) === token) {
+    // Өмнө нь нэвтэрсэн хүнд bb_in байхгүй бол нэмж өгнө
+    return readCookie(request, HINT) === '1' ? next() : next({ headers: cookies(token, MAX_AGE) });
+  }
 
   const wantsPage = request.method === 'GET' && (request.headers.get('accept') || '').includes('text/html');
   if (wantsPage) return gatePage(safePath(url.pathname + url.search), false);
