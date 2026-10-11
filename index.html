@@ -38,7 +38,11 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 .only-light{display:var(--d-light)}.only-dark{display:var(--d-dark)}
-html{scroll-behavior:smooth;scroll-padding-top:72px}
+html{scroll-padding-top:72px}
+/* nav jump: fade out → instant jump → fade in (no long smooth scroll through the whole page) */
+main{transition:opacity .28s ease-out,transform .28s ease-out}
+main.nav-out{opacity:0;transform:translateY(10px);transition-duration:.14s;transition-timing-function:ease-in}
+[data-nav-target]:focus{outline:none}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
 body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased;padding-inline:max(16px,env(safe-area-inset-left))}
 h1,h2,h3,h4{font-family:var(--f-display);font-weight:900;line-height:1.08;margin:0;text-wrap:balance}
@@ -1976,6 +1980,28 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     }, { rootMargin: '-35% 0px -60% 0px' });
     secs.forEach(s => io.observe(s));
   }
+
+  // ------------------------------------------------------------ nav: soft jump
+  const mainEl = $('main');
+  let navTimer = 0;
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const id = decodeURIComponent(a.getAttribute('href').slice(1));
+    const target = id && document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    const jump = () => {
+      target.scrollIntoView({ block: 'start' });
+      if (location.hash !== '#' + id) history.pushState(null, '', '#' + id);
+      if (!target.hasAttribute('tabindex')) { target.setAttribute('tabindex', '-1'); target.setAttribute('data-nav-target', ''); }
+      target.focus({ preventScroll: true });
+    };
+    if (!mainEl || matchMedia('(prefers-reduced-motion: reduce)').matches) { jump(); return; }
+    clearTimeout(navTimer);
+    mainEl.classList.add('nav-out');
+    navTimer = setTimeout(() => { jump(); requestAnimationFrame(() => mainEl.classList.remove('nav-out')); }, 140);
+  });
 
   window.MGLAPP = { saveFile, busy, svgToPng, zipNew, toast, shared: () => shared };
 
