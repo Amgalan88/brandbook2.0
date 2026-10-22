@@ -55,7 +55,11 @@ export async function GET(request) {
 }
 
 async function handleGet(request) {
-  if (!creds()) return json({ entries: [], setup: true });
+  if (!creds()) {
+    // оношилгоо: Blob-тэй холбоотой хувьсагчийн зөвхөн нэрийг (утгыг биш) буцаана
+    const env = Object.keys(process.env).filter((k) => /BLOB|STORE|OIDC/i.test(k)).sort();
+    return json({ entries: [], setup: true, env, vercelEnv: process.env.VERCEL_ENV || null });
+  }
   const img = new URL(request.url).searchParams.get('img');
   if (img) {
     if (!img.startsWith(IMAGES) || img.includes('..')) return new Response('Олдсонгүй', { status: 404 });
