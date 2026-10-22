@@ -1399,12 +1399,17 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       block(ctx, d.pname || '', X, 92, 600, { w: 900, s: 48, color: C.navy, lh: 1.06 }, 1, 30);
       txt(ctx, d.prole || '', X + 2, 192, { w: 700, s: 20, sharp: false, track: 0.16, upper: true, color: C.dorange });
       const rows = [['phone', '+976 ' + (d.phone || '')], ['pin', d.address || ''], ['chat', d.social || '']];
-      rows.forEach((r, i) => {
-        // shrink to fit before the trim's safe edge (860), then cut with „…“
-        const o = { w: 500, s: 24, sharp: false, color: C.navy }, aw = 860 - X - 42; let t = r[1];
-        while (o.s > 16 && measure(ctx, t, o) > aw) o.s--;
-        if (measure(ctx, t, o) > aw) { while (t && measure(ctx, t + '…', o) > aw) t = t.slice(0, -1); t = t.trimEnd() + '…'; }
-        icon(ctx, r[0], X, 248 + i * 46, 26, C.dorange, 2.2); txt(ctx, t, X + 42, 270 + i * 46, o);
+      // long text stays readable in print (≥ 22 px ≈ 2.2 mm): shrink a little, then wrap to 2 lines and push the next rows down
+      const aw = 860 - X - 42; let y = 270;
+      rows.forEach(r => {
+        const o = { w: 500, s: 24, sharp: false, color: C.navy };
+        while (o.s > 22 && measure(ctx, r[1], o) > aw) o.s--;
+        let lines = wrap(ctx, r[1], aw, o);
+        if (lines.length > 2) lines = [lines[0], lines.slice(1).join(' ')];
+        lines = lines.map(l => { if (measure(ctx, l, o) <= aw) return l; while (l && measure(ctx, l + '…', o) > aw) l = l.slice(0, -1); return l.trimEnd() + '…'; });
+        icon(ctx, r[0], X, y - 22, 26, C.dorange, 2.2);
+        lines.forEach((l, k) => txt(ctx, l, X + 42, y + k * 28, o));
+        y += 46 + (lines.length - 1) * 28;
       });
       route(ctx, X, 860, 448, 34, C.orange, C.orange, 'dot');
       txt(ctx, 'Эрээн', X, 500, { w: 700, s: 17, sharp: false, track: 0.2, upper: true, color: C.navy });
