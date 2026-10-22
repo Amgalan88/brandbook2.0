@@ -1,7 +1,7 @@
 // Санал хүсэлт: бичвэр + зураг (4 хүртэл) хүлээн авч Vercel Blob-д хадгална, ирсэн саналын жагсаалтыг буцаана.
 // middleware.js нэвтрэх кодыг шалгадаг тул энд зөвхөн нэвтэрсэн хүн хүрнэ. Зургийг ч энэ функцээр
 // дамжуулж үзүүлдэг тул private store дээр зураг кодгүйгээр нээгдэхгүй.
-// Тохиргоо: Vercel → Storage → Blob → Create (Private) → энэ project-д Connect. BLOB_READ_WRITE_TOKEN автоматаар нэмэгдэнэ.
+// Тохиргоо: Vercel → Storage → Blob → Create (Private) → энэ project-д Connect → Redeploy.
 import { put, list, get } from '@vercel/blob';
 
 const KINDS = ['Санал', 'Алдаа', 'Хүсэлт'];
@@ -11,6 +11,16 @@ const MAX_IMG = 3 * 1024 * 1024;
 const MAX_TEXT = 3000;
 const ENTRIES = 'feedback/entries/';
 const IMAGES = 'feedback/img/';
+
+// Vercel санг 2 янзаар холбодог: шинэ нь BLOB_STORE_ID (+ OIDC токен, Vercel автоматаар өгнө), хуучин нь
+// BLOB_READ_WRITE_TOKEN. Холбохдоо өөр prefix өгсөн бол (жишээ нь FEEDBACK_STORE_ID) түүнийг ч олно.
+function creds() {
+  const env = process.env, keys = Object.keys(env);
+  const token = env.BLOB_READ_WRITE_TOKEN || env[keys.find((k) => /_READ_WRITE_TOKEN$/.test(k) && /^vercel_blob_rw_/.test(env[k] || ''))];
+  if (token) return { token };
+  const storeId = env.BLOB_STORE_ID || env[keys.find((k) => /_STORE_ID$/.test(k) && /^store_/.test(env[k] || ''))];
+  return storeId ? { storeId } : null;
+}
 
 const json = (data, status = 200) => Response.json(data, { status, headers: { 'cache-control': 'no-store' } });
 const clean = (v, n) => String(v ?? '').replace(/\r\n?/g, '\n').trim().slice(0, n);
@@ -30,14 +40,22 @@ async function withAccess(fn) {
   }
 }
 const store = (pathname, body, contentType) =>
-  withAccess((a) => put(pathname, body, { access: a, contentType, addRandomSuffix: true }));
-const read = (pathname) => withAccess((a) => get(pathname, { access: a }));
+  withAccess((a) => put(pathname, body, { ...creds(), access: a, contentType, addRandomSuffix: true }));
+const read = (pathname) => withAccess((a) => get(pathname, { ...creds(), access: a }));
 
 const imgUrl = (pathname) => '/api/feedback?img=' + encodeURIComponent(pathname);
 const view = (e) => ({ id: e.id, at: e.at, kind: e.kind, branch: e.branch, name: e.name, text: e.text, images: e.images.map(imgUrl) });
 
 export async function GET(request) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return json({ entries: [], setup: true });
+  try {
+    return await handleGet(request);
+  } catch (e) {
+    return json({ error: 'Санал ачаалж чадсангүй: ' + String((e && e.message) || e) }, 500);
+  }
+}
+
+async function handleGet(request) {
+  if (!creds()) return json({ entries: [], setup: true });
   const img = new URL(request.url).searchParams.get('img');
   if (img) {
     if (!img.startsWith(IMAGES) || img.includes('..')) return new Response('Олдсонгүй', { status: 404 });
@@ -47,7 +65,7 @@ export async function GET(request) {
       headers: { 'content-type': r.blob.contentType, 'cache-control': 'private, max-age=31536000, immutable' },
     });
   }
-  const { blobs } = await list({ prefix: ENTRIES, limit: 1000 });
+  const { blobs } = await list({ ...creds(), prefix: ENTRIES, limit: 1000 });
   const recent = blobs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)).slice(0, 100);
   const entries = await Promise.all(
     recent.map((b) => read(b.pathname).then((r) => (r && r.statusCode === 200 ? new Response(r.stream).json() : null)).catch(() => null))
@@ -56,7 +74,15 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return json({ error: 'Санал хадгалах сан хараахан тохируулаагүй байна.' }, 503);
+  try {
+    return await handlePost(request);
+  } catch (e) {
+    return json({ error: 'Санал хадгалж чадсангүй: ' + String((e && e.message) || e) }, 500);
+  }
+}
+
+async function handlePost(request) {
+  if (!creds()) return json({ error: 'Санал хадгалах сан хараахан тохируулаагүй байна.' }, 503);
   const form = await request.formData().catch(() => null);
   if (!form) return json({ error: 'Хүсэлт буруу байна.' }, 400);
 

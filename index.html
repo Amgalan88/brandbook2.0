@@ -2189,8 +2189,8 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       const cnt = $('#fb-count');
       try {
         const r = await fetch(API, { credentials: 'same-origin', cache: 'no-store' });
-        if (!r.ok) throw new Error(r.status);
-        const j = await r.json();
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) { list.innerHTML = `<p class="mut">${esc(j.error || 'Ирсэн саналыг ачаалж чадсангүй.')}</p>`; return; }
         if (j.setup) { list.innerHTML = '<p class="mut">Санал хадгалах сан хараахан тохируулаагүй байна.</p>'; return; }
         cnt.textContent = j.entries.length; cnt.hidden = !j.entries.length;
         list.innerHTML = j.entries.length ? j.entries.map(item).join('') : '<p class="mut">Одоогоор санал ирээгүй байна.</p>';
