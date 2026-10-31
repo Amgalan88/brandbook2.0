@@ -1418,6 +1418,31 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     }
   };
 
+  // QR on a white tile (qrcode-generator from cdnjs, loaded on first use; 'mgl:qr' fires when ready so previews redraw)
+  const QR_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+  let qrLoading = false;
+  function qrLib() {
+    if (window.qrcode) { if (window.qrcode.stringToBytesFuncs) window.qrcode.stringToBytes = window.qrcode.stringToBytesFuncs['UTF-8']; return window.qrcode; }
+    if (!qrLoading) {
+      qrLoading = true;
+      const sc = document.createElement('script'); sc.src = QR_SRC;
+      sc.onload = () => window.dispatchEvent(new Event('mgl:qr'));
+      sc.onerror = () => { qrLoading = false; sc.remove(); };
+      document.head.appendChild(sc);
+    }
+    return null;
+  }
+  function qr(ctx, text, x, y, size, col) {
+    ctx.fillStyle = '#FFFFFF'; rr(ctx, x, y, size, size, size * 0.06); ctx.fill();
+    const lib = qrLib(); if (!lib) return false;
+    let q; try { q = lib(0, 'M'); q.addData(String(text).trim()); q.make(); } catch (e) { return false; }
+    const n = q.getModuleCount(), ms = size / (n + 6), o = 3 * ms;
+    ctx.beginPath();
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) ctx.rect(x + o + c * ms, y + o + r * ms, ms, ms);
+    ctx.fillStyle = col || C.navy; ctx.fill();
+    return true;
+  }
+
   // brochure: A4 landscape 297x210 + 3mm bleed => 303x216 mm at 4 px/mm = 1212 x 864
   const BW = 1212, BH = 864, BL = 12, PW = (BW - 2 * BL) / 3;
   function panelX(i) { return BL + PW * i; }
@@ -1428,7 +1453,8 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     fields: [{ k: 'branch', label: 'Салбарын нэр', def: 'Дархан' }, { k: 'kg', label: '1 кг үнэ (₮)', def: '2,500' }, { k: 'm3', label: '1 м³ үнэ (₮)', def: '350,000' },
       { k: 'days', label: 'Хугацаа (хоног)', def: '3–5' }, { k: 'note', label: 'Нэмэлт нөхцөл', def: 'Хэврэг, том оврын ачааны үнийг салбараас тодруулна.' },
       { k: 'address', label: 'Хаяг', def: 'Хуучин хороолол, 21-р байр' }, { k: 'phone', label: 'Утас', def: '9900-0000' },
-      { k: 'hours', label: 'Ажлын цаг', def: 'Даваа–Бямба · 09:00–19:00' }, { k: 'social', label: 'Facebook', def: 'facebook.com/ereeneesmgl.darkhan' }],
+      { k: 'hours', label: 'Ажлын цаг', def: 'Даваа–Бямба · 09:00–19:00' }, { k: 'social', label: 'Facebook', def: 'facebook.com/ereeneesmgl.darkhan' },
+      { k: 'map', label: 'Google Maps линк (QR)', def: '', hint: 'Google Maps → салбараа олох → Хуваалцах → Холбоосыг хуулах. Хоосон бол QR гарахгүй.' }],
     draw(ctx, d) {
       bg(ctx, BW, BH, C.cream);
       // panel 1 — tariff (cream)
@@ -1452,13 +1478,24 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       txt(ctx, 'Холбоо барих', x, 104, { w: 700, s: 14, sharp: false, track: 0.2, upper: true, color: C.orange });
       const bb = block(ctx, (d.branch || ''), x, 124, PW - 88, { w: 900, s: 46, upper: true, color: C.cream, lh: 1.06 }, 2, 26);
       txt(ctx, 'салбар', x, bb.bottom + 34, { w: 700, s: 15, sharp: false, track: 0.3, upper: true, color: C.orange });
-      const info = [['pin', 'Хаяг', d.address], ['phone', 'Утас', '+976 ' + (d.phone || '')], ['clock', 'Ажлын цаг', d.hours], ['chat', 'Сошиал', d.social]];
+      const info = [['pin', 'Хаяг', d.address], ['phone', 'Утас', d.phone ? '+976 ' + d.phone : ''], ['clock', 'Ажлын цаг', d.hours], ['chat', 'Сошиал', d.social]].filter(r => (r[2] || '').trim());
+      // rows flow down (a long address pushes the rest), shrinking a little if they would reach the seal / QR
+      const mw = PW - 128, limit = d.map ? 640 : 672;
+      const layout = (s, g) => { let y = 300; const ys = []; info.forEach(r => { ys.push(y); y += 28 + (wrap(ctx, r[2], mw, { w: 500, s, sharp: false }).length - 1) * s * 1.3 + g; }); return { ys, end: y - g, s }; };
+      let g = 64, L = layout(17, g);
+      while (L.end > limit && L.s > 14) L = layout(L.s - 1, g);
+      while (L.end > limit && g > 44) L = layout(L.s, g -= 4);
       info.forEach((r, i) => {
-        const y = 300 + i * 92; icon(ctx, r[0], x, y - 16, 26, C.orange, 2.2);
+        const y = L.ys[i]; icon(ctx, r[0], x, y - 16, 26, C.orange, 2.2);
         txt(ctx, r[1], x + 40, y, { w: 700, s: 12, sharp: false, track: 0.18, upper: true, color: C.sky });
-        para(ctx, r[2] || '', x + 40, y + 28, PW - 128, { w: 500, s: 17, sharp: false, color: C.cream, lh: 1.3 });
+        para(ctx, r[2], x + 40, y + 28, mw, { w: 500, s: L.s, sharp: false, color: C.cream, lh: 1.3 });
       });
       logo(ctx, 'seal', x, 700, 120, 'on-navy');
+      if (d.map && d.map.trim()) {
+        const qx = panelX(2) - 44 - 120;
+        txt(ctx, 'Байршил', qx, 688, { w: 700, s: 12, sharp: false, track: 0.18, upper: true, color: C.sky });
+        qr(ctx, d.map, qx, 700, 120);
+      }
       // panel 3 — cover
       ctx.fillStyle = C.navy; ctx.fillRect(panelX(2), 0, BW - panelX(2), BH);
       pattern(ctx, panelX(2), 0, BW - panelX(2), BH, C.sky, 0.07, 120);
@@ -1884,6 +1921,7 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     $('#gen-reset').addEventListener('click', () => { delete perTpl[cur]; LS.set('tpl', perTpl); buildForm(); draw(); toast('Жишээ утгыг сэргээлээ'); });
     onShared(() => { if (document.activeElement && document.activeElement.dataset && document.activeElement.dataset.shared) return; buildForm(); draw(); });
     M.loadFonts().then(() => { buildForm(); draw(); });
+    window.addEventListener('mgl:qr', draw);
   }
 
   // ------------------------------------------------------------ branch logo generator (vector)
