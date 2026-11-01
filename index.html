@@ -762,14 +762,27 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     for (const para of prep(s, o).split('\n')) {
       const words = para.split(/\s+/).filter(Boolean); let line = '';
       if (!words.length) { out.push(''); continue; }
+      const fits = t => measure(ctx, t, Object.assign({}, o, { upper: false })) <= maxW;
       for (const wd of words) {
         const t = line ? line + ' ' + wd : wd;
-        if (measure(ctx, t, Object.assign({}, o, { upper: false })) <= maxW || !line) line = t; else { out.push(line); line = wd; }
+        if (fits(t) || (!line && !o.breakLong)) { line = t; continue; }
+        if (line) out.push(line);
+        line = wd;
+        // o.breakLong: a word wider than the line (link, long number) is cut, preferably after / . - _
+        while (o.breakLong && !fits(line)) {
+          let i = line.length - 1; while (i > 1 && !fits(line.slice(0, i))) i--;
+          const cut = Math.max(...['/', '.', '-', '_', '?', '&'].map(ch => line.lastIndexOf(ch, i - 1)));
+          const at = cut + 1 > i * 0.5 ? cut + 1 : Math.max(1, i);
+          out.push(line.slice(0, at)); line = line.slice(at);
+        }
       }
       out.push(line);
     }
     return out;
   }
+
+  // links read better in print without the scheme / www. / trailing slash
+  function tidyUrl(s) { return String(s || '').trim().replace(/^https?:\/\//i, '').replace(/^www\./i, '').replace(/\/+$/, ''); }
 
   // draws wrapped paragraph, returns bottom y
   function para(ctx, s, x, y, maxW, o) {
@@ -1398,11 +1411,11 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       const X = 100;
       block(ctx, d.pname || '', X, 92, 600, { w: 900, s: 48, color: C.navy, lh: 1.06 }, 1, 30);
       txt(ctx, d.prole || '', X + 2, 192, { w: 700, s: 20, sharp: false, track: 0.16, upper: true, color: C.dorange });
-      const rows = [['phone', '+976 ' + (d.phone || '')], ['pin', d.address || ''], ['chat', d.social || '']];
+      const rows = [['phone', '+976 ' + (d.phone || '')], ['pin', d.address || ''], ['chat', tidyUrl(d.social)]];
       // long text stays readable in print (≥ 22 px ≈ 2.2 mm): shrink a little, then wrap to 2 lines and push the next rows down
       const aw = 860 - X - 42; let y = 270;
       rows.forEach(r => {
-        const o = { w: 500, s: 24, sharp: false, color: C.navy };
+        const o = { w: 500, s: 24, sharp: false, color: C.navy, breakLong: true };
         while (o.s > 22 && measure(ctx, r[1], o) > aw) o.s--;
         let lines = wrap(ctx, r[1], aw, o);
         if (lines.length > 2) lines = [lines[0], lines.slice(1).join(' ')];
@@ -1435,7 +1448,9 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
   function qr(ctx, text, x, y, size, col) {
     ctx.fillStyle = '#FFFFFF'; rr(ctx, x, y, size, size, size * 0.06); ctx.fill();
     const lib = qrLib(); if (!lib) return false;
-    let q; try { q = lib(0, 'M'); q.addData(String(text).trim()); q.make(); } catch (e) { return false; }
+    // long links make dense codes; drop to error level L so each module stays big enough to scan from print
+    const make = lvl => { const q = lib(0, lvl); q.addData(String(text).trim()); q.make(); return q; };
+    let q; try { q = make('M'); if (q.getModuleCount() > 41) q = make('L'); } catch (e) { return false; }
     const n = q.getModuleCount(), ms = size / (n + 6), o = 3 * ms;
     ctx.beginPath();
     for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) ctx.rect(x + o + c * ms, y + o + r * ms, ms, ms);
@@ -1478,17 +1493,17 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       txt(ctx, 'Холбоо барих', x, 104, { w: 700, s: 14, sharp: false, track: 0.2, upper: true, color: C.orange });
       const bb = block(ctx, (d.branch || ''), x, 124, PW - 88, { w: 900, s: 46, upper: true, color: C.cream, lh: 1.06 }, 2, 26);
       txt(ctx, 'салбар', x, bb.bottom + 34, { w: 700, s: 15, sharp: false, track: 0.3, upper: true, color: C.orange });
-      const info = [['pin', 'Хаяг', d.address], ['phone', 'Утас', d.phone ? '+976 ' + d.phone : ''], ['clock', 'Ажлын цаг', d.hours], ['chat', 'Сошиал', d.social]].filter(r => (r[2] || '').trim());
+      const info = [['pin', 'Хаяг', d.address], ['phone', 'Утас', d.phone ? '+976 ' + d.phone : ''], ['clock', 'Ажлын цаг', d.hours], ['chat', 'Сошиал', tidyUrl(d.social)]].filter(r => (r[2] || '').trim());
       // rows flow down (a long address pushes the rest), shrinking a little if they would reach the seal / QR
       const mw = PW - 128, limit = d.map ? 640 : 672;
-      const layout = (s, g) => { let y = 300; const ys = []; info.forEach(r => { ys.push(y); y += 28 + (wrap(ctx, r[2], mw, { w: 500, s, sharp: false }).length - 1) * s * 1.3 + g; }); return { ys, end: y - g, s }; };
+      const layout = (s, g) => { let y = 300; const ys = []; info.forEach(r => { ys.push(y); y += 28 + (wrap(ctx, r[2], mw, { w: 500, s, sharp: false, breakLong: true }).length - 1) * s * 1.3 + g; }); return { ys, end: y - g, s }; };
       let g = 64, L = layout(17, g);
       while (L.end > limit && L.s > 14) L = layout(L.s - 1, g);
       while (L.end > limit && g > 44) L = layout(L.s, g -= 4);
       info.forEach((r, i) => {
         const y = L.ys[i]; icon(ctx, r[0], x, y - 16, 26, C.orange, 2.2);
         txt(ctx, r[1], x + 40, y, { w: 700, s: 12, sharp: false, track: 0.18, upper: true, color: C.sky });
-        para(ctx, r[2], x + 40, y + 28, mw, { w: 500, s: L.s, sharp: false, color: C.cream, lh: 1.3 });
+        para(ctx, r[2], x + 40, y + 28, mw, { w: 500, s: L.s, sharp: false, color: C.cream, lh: 1.3, breakLong: true });
       });
       logo(ctx, 'seal', x, 700, 120, 'on-navy');
       if (d.map && d.map.trim()) {
