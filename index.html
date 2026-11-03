@@ -1386,12 +1386,13 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
   function ptext(ctx, s, x, y, size, w, col, o) { return txt(ctx, s, x, y, Object.assign({ w: w, s: size, sharp: false, color: col }, o || {})); }
 
   T.card_front = {
-    name: 'Нэрийн хуудас · нүүр', code: 'H01', w: 960, h: 560, mm: { w: 96, h: 56, bleed: 3 }, print: true, fields: [],
-    draw(ctx) {
+    name: 'Нэрийн хуудас · нүүр', code: 'H01', w: 960, h: 560, mm: { w: 96, h: 56, bleed: 3 }, print: true, fields: [{ k: 'phone', label: 'Утас', def: '9900-0000' }],
+    draw(ctx, d) {
       bg(ctx, 960, 560, C.navy);
       const L = LOGOS.stacked, lw = 600, lh = L.h * lw / L.w;
       logo(ctx, 'stacked', 180, 280 - lh / 2 - 26, lw, 'on-navy');
       txt(ctx, 'Эрээнээс танд хүртэл.', 180, 430, { w: 600, s: 22, sharp: false, track: 0.16, upper: true, color: C.sky });
+      if ((d.phone || '').trim()) txt(ctx, '+976 ' + d.phone.trim(), 180, 476, { w: 700, s: 22, sharp: false, track: 0.08, color: C.orange });
     }
   };
 
@@ -1528,7 +1529,8 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     name: 'Нугалбар · дотор', code: 'H04', w: BW, h: BH, mm: { w: 303, h: 216, bleed: 3 }, print: true,
     fields: [{ k: 'branch', label: 'Салбарын нэр', def: 'Дархан' }, { k: 'days', label: 'Хугацаа (хоног)', def: '3–5' },
       { k: 'banned', label: 'Хүлээж авахгүй бараа', def: 'Шатамхай бодис, шингэн, эм, хүнс, бэлэн мөнгө' },
-      { k: 'track', label: 'Ачаа шалгах арга', def: 'Утасны дугаараар салбараас эсвэл мессежээр' }],
+      { k: 'track', label: 'Ачаа шалгах арга', def: 'Утасны дугаараар салбараас эсвэл мессежээр' },
+      { k: 'phone', label: 'Утас', def: '9900-0000' }],
     draw(ctx, d) {
       bg(ctx, BW, BH, C.cream);
       let x = panelX(0) + 44;
@@ -1542,6 +1544,7 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
         else circle(ctx, x + 14, r[1], 14, C.orange);
         txt(ctx, r[0], x + 46, r[1] + 6, { w: 700, s: 15, sharp: false, track: 0.18, upper: true, color: r[2] });
       });
+      if ((d.phone || '').trim()) { icon(ctx, 'phone', x + 46, 722, 22, C.dorange, 2.2); txt(ctx, '+976 ' + d.phone.trim(), x + 78, 740, { w: 700, s: 17, sharp: false, color: C.navy }); }
       ctx.fillStyle = C.navy; ctx.fillRect(panelX(1), 0, PW, BH);
       x = panelX(1) + 44;
       txt(ctx, 'Заавар', x, 104, { w: 700, s: 14, sharp: false, track: 0.2, upper: true, color: C.orange });
