@@ -28,6 +28,19 @@
   --ok:#1E9E5A; --no:#D62839; --focus:#FF8200; --shadow:0 18px 40px -26px rgba(0,30,80,.55);
   --f-display:'GS','G','Noto Sans','Segoe UI',system-ui,sans-serif; --f-body:'G','Noto Sans','Segoe UI',system-ui,sans-serif;
   --r:14px; --col:1040px; --d-light:block; --d-dark:none;
+  /* Type rules: kerning, tracking, leading, measure, wrap, numerals, touch, blueprint, dither */
+  --kerning:normal; --kerning-display:normal; --render-display:optimizeLegibility;
+  --track-display:-0.02em; --track-h:-0.01em; --track-body:0em;
+  --track-cap:0.08em; --track-cap-min:0.06em; --track-small:0.01em;
+  --lead-head:1.15; --lead-head-min:1.1; --lead-head-max:1.2;
+  --lead-body:1.6; --lead-body-min:1.5; --lead-body-max:1.6;
+  --measure:65ch; --wrap-head:balance; --wrap-body:pretty; --nums:tabular-nums; --touch:44px;
+  --blueprint-grid:24px; --blueprint-paper:var(--panel);
+  --blueprint-line:color-mix(in srgb, var(--panel-mut) 42%, transparent);
+  --blueprint-contour:color-mix(in srgb, var(--signal) 70%, transparent);
+  --blueprint-line-light:color-mix(in srgb, var(--ink) 18%, transparent);
+  --blueprint-contour-light:color-mix(in srgb, var(--ink) 30%, transparent);
+  --dither-cell:4px; --dither-min:240px; --dither-max:440px; --ascii-size:13px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --ground:#041E42; --surface:#0B2A5B; --sunken:#08234C; --ink:#F6EFE3; --ink-2:#BCD0F0; --line:rgba(188,208,240,.2);
@@ -44,19 +57,19 @@ main{transition:opacity .28s ease-out,transform .28s ease-out}
 main.nav-out{opacity:0;transform:translateY(10px);transition-duration:.14s;transition-timing-function:ease-in}
 [data-nav-target]:focus{outline:none}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
-body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.6 var(--f-body);-webkit-font-smoothing:antialiased;padding-inline:max(16px,env(safe-area-inset-left))}
-h1,h2,h3,h4{font-family:var(--f-display);font-weight:900;line-height:1.08;margin:0;text-wrap:balance}
-h2{font-size:clamp(28px,5vw,58px);text-transform:uppercase;letter-spacing:-.005em;overflow-wrap:break-word}
-h3{font-size:clamp(22px,2.6vw,28px);font-weight:800;margin-top:12px}
-h4{font-size:18px;font-weight:800}
-p{margin:0}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/var(--lead-body) var(--f-body);font-kerning:normal;font-kerning:var(--kerning);letter-spacing:var(--track-body);-webkit-font-smoothing:antialiased;padding-inline:max(16px,env(safe-area-inset-left))}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:900;line-height:var(--lead-head);margin:0;text-wrap:balance;text-wrap:var(--wrap-head);font-kerning:normal;font-kerning:var(--kerning)}
+h2{font-size:clamp(28px,5vw,58px);text-transform:uppercase;letter-spacing:var(--track-h);overflow-wrap:break-word}
+h3{font-size:clamp(22px,2.6vw,28px);font-weight:800;margin-top:12px;letter-spacing:var(--track-h)}
+h4{font-size:18px;font-weight:800;letter-spacing:var(--track-h)}
+p{margin:0;text-wrap:pretty;text-wrap:var(--wrap-body);widows:2;orphans:2}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
-.cap{font:700 12px/1.3 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.cap{font:700 12px/1.3 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--accent)}
 .mut{color:var(--ink-2)}
 .note{font-size:14px;color:var(--ink-2)}
-.num{font-family:var(--f-display);font-weight:900;font-variant-numeric:tabular-nums}
-.mono{font-family:var(--f-display);font-weight:700;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.num{font-family:var(--f-display);font-weight:900;font-variant-numeric:var(--nums)}
+.mono{font-family:var(--f-display);font-weight:700;letter-spacing:var(--track-body);font-variant-numeric:var(--nums)}
 .ic{flex:none;vertical-align:middle}
 /* layout */
 .layout{max-width:1380px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:56px;padding-block:28px 80px}
@@ -70,7 +83,7 @@ main{min-width:0;max-width:var(--col)}
 .rail a.on{color:var(--ink);font-weight:800}
 .rail li:before{content:"";position:absolute;left:-24px;top:14px;width:11px;height:11px;border-radius:50%;background:var(--ground);border:3px solid var(--ink-2);box-sizing:border-box}
 .rail li:has(a.on):before{background:var(--signal);border-color:var(--signal)}
-.rail .st{font:700 11px/1 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:var(--accent);padding-left:30px;position:relative}
+.rail .st{font:700 11px/1 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--accent);padding-left:30px;position:relative}
 .rail .st:before{content:"";position:absolute;left:4px;top:-4px;width:17px;height:17px;border-radius:50%;border:4px solid var(--signal);box-sizing:border-box;background:var(--ground)}
 .rail .st.end:before{border:0;background:var(--signal);width:15px;height:15px;left:5px}
 .rail .tools{margin-top:22px;display:grid;gap:8px}
@@ -105,25 +118,25 @@ main{min-width:0;max-width:var(--col)}
 .hero .top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;position:relative}
 .hero .top .cap{color:var(--signal)}
 .hero .lg-hero{display:block;width:min(100%,820px);height:auto;margin:clamp(28px,5vw,56px) 0 clamp(22px,3vw,34px);position:relative}
-.hero .tag{font:500 clamp(22px,2.6vw,32px)/1.25 var(--f-body);position:relative}
+.hero .tag{font:500 clamp(22px,2.6vw,32px)/var(--lead-head-max) var(--f-body);position:relative;letter-spacing:var(--track-body)}
 .hero .meta{color:var(--panel-mut);font-size:15px;margin-top:8px;position:relative}
 .hero .btns{margin-top:26px;position:relative}
 .mybranch{margin-top:28px;background:rgba(255,255,255,.07);border-radius:16px;padding:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:12px;align-items:end;position:relative}
-.mybranch label{display:grid;gap:6px;font:700 11.5px/1.2 var(--f-body);letter-spacing:.16em;text-transform:uppercase;color:var(--panel-mut)}
+.mybranch label{display:grid;gap:6px;font:700 11.5px/1.2 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--panel-mut)}
 .mybranch input[type=text]{font:600 16px var(--f-body);padding:11px 12px;border-radius:10px;border:1.5px solid rgba(188,208,240,.35);background:rgba(4,30,66,.55);color:var(--panel-ink);width:100%;min-width:0}
-.mybranch .hint{font-size:13px;color:var(--panel-mut);max-width:220px;line-height:1.4}
+.mybranch .hint{font-size:13px;color:var(--panel-mut);max-width:220px;line-height:1.4;letter-spacing:var(--track-small)}
 @media (max-width:760px){.mybranch{grid-template-columns:minmax(0,1fr)}.mybranch .hint{max-width:none}}
 /* chapters */
 .chapter{padding-top:86px}
 .ch-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(18px,3vw,34px);align-items:start;padding-bottom:28px;border-bottom:3px solid var(--ink);margin-bottom:34px}
-.ch-num{font:900 clamp(64px,9vw,120px)/.8 var(--f-display);color:var(--signal)}
+.ch-num{font:900 clamp(64px,9vw,120px)/.8 var(--f-display);color:var(--signal);letter-spacing:var(--track-display);font-kerning:var(--kerning-display);text-rendering:var(--render-display)}
 .ch-head>div{min-width:0}
 @media (max-width:640px){.ch-head{grid-template-columns:minmax(0,1fr);gap:10px}.ch-num{font-size:64px}}
-.ch-head .lede{font-size:clamp(17px,1.8vw,19px);color:var(--ink-2);margin-top:14px;max-width:62ch}
+.ch-head .lede{font-size:clamp(17px,1.8vw,19px);color:var(--ink-2);margin-top:14px;max-width:var(--measure)}
 .block{margin-top:46px}
 .block>.cap{display:block;margin-bottom:10px}
 .block>h3{margin:0 0 12px}
-.block>p.lede2{font-size:17px;color:var(--ink-2);max-width:66ch;margin-bottom:22px}
+.block>p.lede2{font-size:17px;color:var(--ink-2);max-width:var(--measure);margin-bottom:22px}
 .grid{display:grid;gap:16px}
 .g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
 @media (max-width:900px){.g4,.g5{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -146,8 +159,8 @@ ol.steps li b{display:block;font-size:17px;margin-bottom:2px}
 .mk{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;color:#fff;flex:none;vertical-align:middle}
 .mk.ok{background:var(--ok)}.mk.no{background:var(--no)}
 .tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--line);background:var(--surface)}
-table.t{width:100%;border-collapse:collapse;font-size:15px;min-width:560px}
-table.t th{font:700 11.5px/1.3 var(--f-body);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);text-align:left;padding:14px 14px 10px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+table.t{width:100%;border-collapse:collapse;font-size:15px;min-width:560px;font-variant-numeric:var(--nums)}
+table.t th{font:700 11.5px/1.3 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--accent);text-align:left;padding:14px 14px 10px;border-bottom:1.5px solid var(--line);white-space:nowrap}
 table.t td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
 table.t tr:last-child td{border-bottom:0}
 table.t td.k{font-weight:700}
@@ -169,14 +182,14 @@ table.tsm th,table.tsm td{padding:8px 8px}
 .logo-stage>svg{max-width:100%;height:auto;max-height:200px}
 .logo-card .ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 select,input[type=text],textarea{font:500 15px var(--f-body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
-textarea{width:100%;resize:vertical;line-height:1.45}
+textarea{width:100%;resize:vertical;line-height:var(--lead-body)}
 .logo-card select{flex:1}
 /* swatches */
 .sw{border-radius:var(--r);padding:24px}
 .sw h4{font-size:30px;text-transform:uppercase}
 .codes{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:center;font-size:14px}
-.codes b{font:700 11px/1 var(--f-body);letter-spacing:.14em;opacity:.75}
-.codes button{font:700 12px var(--f-body);border:0;border-radius:7px;padding:5px 8px;cursor:pointer;background:rgba(255,255,255,.18);color:inherit}
+.codes b{font:700 11px/1 var(--f-body);letter-spacing:var(--track-cap);opacity:.75}
+.codes button{font:700 12px var(--f-body);letter-spacing:var(--track-small);border:0;border-radius:7px;padding:5px 8px;cursor:pointer;background:rgba(255,255,255,.18);color:inherit}
 .sw.lt .codes button{background:rgba(0,45,114,.08)}
 .chipc{display:flex;flex-direction:column;gap:6px;min-width:0}
 .chipc .s{height:76px;border-radius:10px;border:1px solid var(--line)}
@@ -192,7 +205,7 @@ textarea{width:100%;resize:vertical;line-height:1.45}
 .gen{background:var(--panel);color:var(--panel-ink);border-radius:22px;padding:clamp(16px,3vw,28px)}
 .gen .cap{color:var(--signal)}
 .picks{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;margin-top:14px;scrollbar-color:var(--panel-mut) transparent}
-.picks .grp{flex:none;align-self:center;writing-mode:vertical-rl;transform:rotate(180deg);font:700 11px/1 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:var(--panel-mut);padding:0 2px}
+.picks .grp{flex:none;align-self:center;writing-mode:vertical-rl;transform:rotate(180deg);font:700 11px/1 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--panel-mut);padding:0 2px}
 .tpl-pick{flex:none;width:96px;border:0;background:transparent;color:var(--panel-ink);cursor:pointer;padding:0;text-align:left}
 .tpl-pick img{width:96px;height:120px;object-fit:cover;object-position:top;border-radius:8px;display:block;border:3px solid transparent}
 .tpl-pick[aria-pressed=true] img{border-color:var(--signal)}
@@ -202,12 +215,12 @@ textarea{width:100%;resize:vertical;line-height:1.45}
 @media (max-width:900px){.gen-body{grid-template-columns:minmax(0,1fr)}.gen-prev{order:-1}}
 .gen-prev{position:sticky;top:76px;display:flex;flex-direction:column;gap:12px;align-items:center}
 .gen-prev canvas{width:100%;max-width:460px;height:auto;border-radius:10px;box-shadow:0 20px 40px -20px rgba(0,0,0,.6);background:#102C5C;display:block}
-#gen-meta{font-size:13px;color:var(--panel-mut)}
+#gen-meta{font-size:13px;color:var(--panel-mut);letter-spacing:var(--track-small)}
 #gen-meta b{color:var(--signal)}
 #gen-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-#gen-form label,.gen label.f{display:grid;gap:6px;font:700 11.5px/1.3 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--panel-mut);min-width:0}
+#gen-form label,.gen label.f{display:grid;gap:6px;font:700 11.5px/1.3 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--panel-mut);min-width:0}
 #gen-form label:has(textarea){grid-column:1/-1}
-#gen-form small{font:500 12px/1.3 var(--f-body);letter-spacing:0;text-transform:none;color:var(--panel-mut);opacity:.85}
+#gen-form small{font:500 12px/1.3 var(--f-body);letter-spacing:var(--track-small);text-transform:none;color:var(--panel-mut);opacity:.85}
 #gen-form label{align-content:start}
 .gen input[type=text],.gen select,.gen textarea{background:rgba(4,30,66,.6);color:var(--panel-ink);border-color:rgba(188,208,240,.3);width:100%}
 .gen .note{color:var(--panel-mut)}
@@ -218,8 +231,8 @@ textarea{width:100%;resize:vertical;line-height:1.45}
 .tool{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:22px;align-items:center}
 @media (max-width:820px){.tool{grid-template-columns:minmax(0,1fr)}}
 .tool .ctl{display:grid;gap:12px}
-.tool label{display:grid;gap:6px;font:700 11.5px/1.3 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
-.tool .chk{display:flex;align-items:center;gap:10px;text-transform:none;letter-spacing:0;font-size:15px;font-weight:600;color:var(--ink)}
+.tool label{display:grid;gap:6px;font:700 11.5px/1.3 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--ink-2)}
+.tool .chk{display:flex;align-items:center;gap:10px;text-transform:none;letter-spacing:var(--track-body);font-size:15px;font-weight:600;color:var(--ink)}
 .stage{border-radius:12px;background:repeating-conic-gradient(var(--sunken) 0 25%,var(--surface) 0 50%) 0 0/22px 22px;display:flex;align-items:center;justify-content:center;padding:18px;min-height:220px}
 .stage>svg{max-width:100%;height:auto;display:block}
 #sg-stage{background:var(--sunken);padding:0;min-height:0;max-height:520px;margin:0 auto;width:100%}
@@ -229,7 +242,7 @@ textarea{width:100%;resize:vertical;line-height:1.45}
 #door-stage{background:var(--sunken);padding:24px}
 #door-stage>svg{max-height:520px;width:auto;box-shadow:0 20px 40px -24px rgba(0,30,80,.55)}
 .fb-form{display:grid;gap:14px}
-.fb-form label{display:grid;gap:6px;font:700 11.5px/1.3 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.fb-form label{display:grid;gap:6px;font:700 11.5px/1.3 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--ink-2)}
 .fb-form input[type=text],.fb-form textarea{width:100%}
 .fb-form textarea{resize:vertical;font:500 16px/1.5 var(--f-body);text-transform:none;letter-spacing:0}
 .fb-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -244,7 +257,7 @@ textarea{width:100%;resize:vertical;line-height:1.45}
 .fb-item{padding:16px 0;border-top:1px solid var(--line);display:grid;gap:8px}
 .fb-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:14px}
 .fb-meta time{color:var(--ink-2)}
-.fb-tag{font:700 11px/1 var(--f-body);letter-spacing:.12em;text-transform:uppercase;padding:5px 8px;border-radius:6px;background:var(--sunken)}
+.fb-tag{font:700 11px/1 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;padding:5px 8px;border-radius:6px;background:var(--sunken)}
 .fb-tag[data-k="Алдаа"]{background:var(--signal);color:#002D72}
 .fb-text{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .seg{display:flex;gap:6px;flex-wrap:wrap}
@@ -259,12 +272,12 @@ textarea{width:100%;resize:vertical;line-height:1.45}
 figure{margin:0}
 .thumbs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
 .thumbs figure img{width:100%;height:auto;border-radius:8px;display:block;box-shadow:var(--shadow)}
-.thumbs figcaption{font-size:13px;margin-top:8px;color:var(--ink-2)}
-.thumbs figcaption b{display:block;color:var(--ink);font-size:14px}
+.thumbs figcaption{font-size:13px;margin-top:8px;color:var(--ink-2);letter-spacing:var(--track-small)}
+.thumbs figcaption b{display:block;color:var(--ink);font-size:14px;letter-spacing:var(--track-body)}
 .thumbs figcaption,.fig figcaption{overflow-wrap:anywhere}
 @media (max-width:760px){.thumbs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
-.icons button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--ink);cursor:pointer;font:700 12px/1.2 var(--f-body);overflow-wrap:anywhere;text-align:center;min-width:0}
+.icons button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--ink);cursor:pointer;font:700 12px/1.2 var(--f-body);letter-spacing:var(--track-small);overflow-wrap:anywhere;text-align:center;min-width:0}
 .icons button:hover{border-color:var(--signal)}
 .icons button .ic{color:var(--ink)}
 /* bound rows */
@@ -281,7 +294,7 @@ figure{margin:0}
 .week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
 .week div{border-radius:10px;padding:12px 10px;font-size:14px;font-weight:700;background:var(--surface);border:1px solid var(--line);min-height:96px}
 .week div.reel{background:var(--signal);color:var(--on-signal);border-color:var(--signal)}
-.week span{display:block;font:700 11px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.week span{display:block;font:700 11px/1 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--accent);margin-bottom:8px}
 .week div.reel span{color:var(--on-signal)}
 @media (max-width:760px){.week{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .timeline{display:grid;grid-template-columns:repeat(30,1fr);border-radius:10px;overflow:hidden}
@@ -301,7 +314,7 @@ details p{padding:0 0 14px;color:var(--ink-2)}
 .foot p{font-size:14px;color:var(--ink-2);max-width:70ch}
 @media (max-width:700px){.foot{grid-template-columns:minmax(0,1fr)}}
 .theme-btn{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
-.badge-new{display:inline-block;font:800 11px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;background:var(--signal);color:var(--on-signal);padding:5px 8px;border-radius:6px;vertical-align:middle;margin-left:8px}
+.badge-new{display:inline-block;font:800 11px/1 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;background:var(--signal);color:var(--on-signal);padding:5px 8px;border-radius:6px;vertical-align:middle;margin-left:8px}
 .pill{display:inline-block;padding:4px 10px;border-radius:20px;font:700 12.5px var(--f-body);background:var(--sunken)}
 .effs{border-top:1.5px solid var(--line)}
 .eff{display:grid;grid-template-columns:64px minmax(0,1.3fr) minmax(0,1fr);gap:20px;padding:18px 0;border-bottom:1.5px solid var(--line)}
@@ -325,7 +338,7 @@ details p{padding:0 0 14px;color:var(--ink-2)}
 .sym-tile .sw svg{width:100%;height:auto;display:block}
 .sym-tile .btns{gap:6px}
 .sym-tile .btn{flex:1 1 100%;white-space:nowrap;padding-inline:6px;font-size:12.5px}
-.sym-tile .note{font-size:12.5px}
+.sym-tile .note{font-size:12.5px;letter-spacing:var(--track-small)}
 .vids{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:18px;align-items:start}
 @media (max-width:820px){.vids{grid-template-columns:minmax(0,1fr)}}
 .vids video{width:100%;height:auto;display:block;border-radius:var(--r);background:#041E42;box-shadow:var(--shadow)}
@@ -333,12 +346,52 @@ details p{padding:0 0 14px;color:var(--ink-2)}
 .anim-stage canvas{max-width:100%;max-height:520px;height:auto;display:block;border-radius:8px}
 .veh{background:var(--surface);border-radius:var(--r);padding:18px;border:1px solid var(--line)}
 .veh svg{width:100%;height:auto;display:block}
-.pos-q{font-family:var(--f-display);font-weight:800;font-size:clamp(20px,3vw,28px);line-height:1.2}
+.pos-q{font-family:var(--f-display);font-weight:800;font-size:clamp(20px,3vw,28px);line-height:var(--lead-head);letter-spacing:var(--track-h)}
 .cases{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:10px}
 @media (max-width:820px){.cases{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .cases .ill svg{width:100%;height:auto;display:block}
 .mock-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 @media (max-width:560px){.mock-grid{grid-template-columns:minmax(0,1fr)}}
+/* Type specimens: kerning, tracking, leading, numerals, touch, blueprint, dither */
+.display{font-family:var(--f-display);font-weight:900;line-height:var(--lead-head);letter-spacing:var(--track-display);font-kerning:var(--kerning-display);text-rendering:var(--render-display);text-wrap:balance;text-wrap:var(--wrap-head);margin:0}
+.display.metric{font-kerning:var(--kerning);text-rendering:auto}
+.display.kern-off{font-kerning:none;text-rendering:auto}
+.h-sample,.card p.h-sample{font-family:var(--f-display);font-weight:800;font-size:28px;line-height:var(--lead-head);letter-spacing:var(--track-h);text-wrap:var(--wrap-head);margin:0}
+.kicker,.card p.kicker{font:700 12px/1.3 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--accent);margin:0}
+.t-small,.card p.t-small{font-size:13px;letter-spacing:var(--track-small);line-height:var(--lead-body);color:var(--ink);margin:0}
+.body-sample,.card p.body-sample{font-size:16px;line-height:var(--lead-body);letter-spacing:var(--track-body);margin:0}
+.tok{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em;font-weight:700;letter-spacing:0}
+.measure,.card p.measure{max-width:var(--measure);font-size:16px;line-height:var(--lead-body);text-wrap:pretty;text-wrap:var(--wrap-body)}
+.kern-pair{display:grid;gap:2px;align-items:start}
+.kern-pair .display{white-space:nowrap}
+.track-stack{display:grid;gap:4px}
+.track-stack .note{margin-top:0}
+.widow,.card p.widow{max-width:12ch;margin-top:12px;color:var(--no);line-height:var(--lead-body);font-size:17px}
+table.t.propnums{font-variant-numeric:proportional-nums}
+table.t td.numr,table.t th.numr{text-align:right;font-variant-numeric:inherit}
+.touch-demo{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px}
+.touch-box{width:var(--touch);height:var(--touch);border:2px dashed var(--signal);border-radius:12px;flex:none;box-sizing:border-box}
+.touch-field{display:grid;gap:6px;font:700 12px/1.3 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--accent);min-width:min(100%,220px)}
+.touch-field input{text-transform:none;letter-spacing:var(--track-body);font-weight:600}
+.blueprint{--bp-paper:var(--blueprint-paper);--bp-line:var(--blueprint-line);--bp-contour:var(--blueprint-contour);position:relative;isolation:isolate;overflow:hidden;border-radius:var(--r);min-height:280px;padding:26px 22px;background-color:var(--bp-paper);color:var(--panel-ink);background-image:linear-gradient(var(--bp-line) 1px,transparent 1px),linear-gradient(90deg,var(--bp-line) 1px,transparent 1px);background-size:var(--blueprint-grid) var(--blueprint-grid);background-position:center}
+.blueprint:before{content:"";position:absolute;z-index:0;pointer-events:none;inset:-8% -18% -8% 38%;background:repeating-radial-gradient(ellipse at 72% 58%,transparent 0 13px,var(--bp-contour) 13px 14.5px);opacity:.85;-webkit-mask-image:radial-gradient(ellipse at 72% 58%,transparent 0%,#000 22%,#000 58%,transparent 80%);mask-image:radial-gradient(ellipse at 72% 58%,transparent 0%,#000 22%,#000 58%,transparent 80%)}
+.blueprint .bp-copy{position:relative;z-index:1;max-width:20ch}
+.blueprint .display,.blueprint p.display{font-size:clamp(32px,4vw,52px);margin:8px 0 8px;color:var(--panel-ink)}
+.blueprint p{color:var(--panel-mut);max-width:26ch}
+.blueprint .cap{color:var(--signal)}
+.blueprint.on-light{--bp-paper:var(--sunken);--bp-line:var(--blueprint-line-light);--bp-contour:var(--blueprint-contour-light);color:var(--ink)}
+.blueprint.on-light p{color:var(--ink-2)}
+.blueprint.on-light p.display{color:var(--ink)}
+.blueprint.on-light .cap{color:var(--accent)}
+.dither-svg{width:min(100%,var(--dither-max));height:auto;color:var(--ink);display:block}
+.dither-bad{width:72px;max-width:72px;color:#8b939e}
+.dither-stage{background:var(--ground);border-radius:12px;padding:16px;border:1px solid var(--line)}
+.dither-stage.bad{background:#b7bec7;border-color:transparent;display:flex;align-items:center;justify-content:center;min-height:120px}
+.ascii{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--ascii-size);line-height:1.2;letter-spacing:var(--track-small);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;overflow:auto;max-width:100%;margin:0}
+@media (max-width:640px){
+  .btn,.chips a,.theme-btn,.seg button,.codes button,select,input[type=text],textarea{min-height:var(--touch)}
+  .chips a{display:inline-flex;align-items:center}
+}
 </style>
 <style>[hidden]{display:none!important}img{max-width:100%}</style>
 </head>
@@ -489,9 +542,9 @@ details p{padding:0 0 14px;color:var(--ink-2)}
 <div class="block"><span class="cap">Үйлдвэрлэл</span><h3>Орчин бүрт тохирох код</h3><div class="tw"><table class="t"><thead><tr><th>Орчин</th><th>Хэрэглээ</th><th>Өнгөний утга</th></tr></thead><tbody><tr><td class=k>Дэлгэц</td><td>Facebook, вэб, PDF</td><td>HEX / RGB · sRGB</td></tr><tr><td class=k>Офсет · бүрсэн цаас</td><td>Нугалбар, постер</td><td>Pantone 288 C · 151 C эсвэл CMYK</td></tr><tr><td class=k>Бүрээсгүй цаас</td><td>Нэрийн хуудас, баримт</td><td>Pantone 288 U · 151 U</td></tr><tr><td class=k>Гадна хаяг</td><td>Хаяг, туг, наалт</td><td>Пленк, UV бэх, UV ламинат</td></tr><tr><td class=k>Гэрэлтэй үсэг</td><td>Акрил + LED</td><td>Гэрлийг асаасан үед 151 C-тэй тулгана</td></tr><tr><td class=k>Хатгамал</td><td>Малгай, цамц, хүүдий</td><td>Утасны каталогоос дээжээр</td></tr><tr><td class=k>Даавуу</td><td>Хувцас, тор, зоонтик</td><td>Pantone TCX (даавууны)</td></tr><tr><td class=k>Шелкографи</td><td>Цамц, тор</td><td>Pantone бэх, бараан дээр цагаан суурь</td></tr></tbody></table></div>
 <p class="note" style="margin-top:10px">Хэвлэхээс өмнө: Pantone дээж үзүүлэх → proof хэвлэлт авах → өдрийн гэрэлд тулгах → баталсан дээжийг салбартаа хадгалах.</p></div>
 </section><section class="chapter" id="ch04" aria-labelledby="ch04-t">
-<header class="ch-head"><div class="ch-num" aria-hidden="true">04</div><div><h2 id="ch04-t">Үсгийн фонт</h2><p class="lede">Geologica нь Монгол кирилл үсгийг бүрэн дэмждэг, үнэгүй, орчин үеийн фонт. Нэг фонтын хоёр хэв маяг — хурц ирмэгтэй гарчиг, зөөлөн бичвэр — бүх материалыг нэг дуу хоолойтой болгоно.</p></div></header>
+<header class="ch-head"><div class="ch-num" aria-hidden="true">04</div><div><h2 id="ch04-t">Үсгийн фонт</h2><p class="lede">Geologica нь Монгол кирилл үсгийг бүрэн дэмждэг, үнэгүй, орчин үеийн фонт. Нэг фонтын хоёр хэв маяг — хурц ирмэгтэй гарчиг, зөөлөн бичвэр — бүх материалыг нэг дуу хоолойтой болгоно. Зай, мөр, тоо, хүрэх талбайг доорх токеноор барина.</p></div></header>
 <div class="block split"><div>
-<div style="font:900 clamp(120px,18vw,220px)/.85 var(--f-display);color:var(--signal)">Өү</div>
+<div class="display" style="font-size:clamp(120px,18vw,220px);line-height:var(--lead-head-min);color:var(--signal)">Өү</div>
 <h3 style="font-size:44px;margin-top:10px">Geologica</h3>
 <p class="mut" style="margin-top:8px">Монгол кирилл бүрэн (Ө, Ү, ₮, №). 100–900 жинтэй, хурц ирмэгийн (Sharpness) тохиргоотой. Үнэгүй, арилжаанд чөлөөтэй (SIL Open Font License).</p>
 <div class="btns" style="margin-top:16px"><a class="btn pri" href="https://fonts.google.com/specimen/Geologica" target="_blank" rel="noopener">Google Fonts-оос татах</a></div>
@@ -501,9 +554,92 @@ details p{padding:0 0 14px;color:var(--ink-2)}
 <div class="card"><span class="cap">Бичвэр · зөөлөн ирмэг</span><div style="font:400 24px/1.4 var(--f-body);margin-top:8px;overflow-wrap:anywhere">абвгдеёжзийклмноөпрстуүфхцчшщъыьэюя<br>0123456789 ₮ № % · „ “</div></div>
 <div class="card"><div style="font:400 22px/1.5 var(--f-body)">Regular · Ачаа Эрээнээс танд хүртэл</div><div style="font:500 22px/1.5 var(--f-body)">Medium · Ачаа Эрээнээс танд хүртэл</div><div style="font:700 22px/1.5 var(--f-body)">Bold · Ачаа Эрээнээс танд хүртэл</div><div style="font:900 22px/1.5 var(--f-body)">Black · Ачаа Эрээнээс танд хүртэл</div></div></div></div>
 <div class="block"><span class="cap">Шатлал</span><h3>Шатлал ба хэмжээ</h3><p class="lede2">Нэг материалд дээд тал нь гурван хэмжээ. Зураг дээрх бичиг 20 үгээс хэтрэхгүй — үлдсэнийг caption-д.</p>
-<div class="tw"><table class="t"><thead><tr><th>Түвшин</th><th>Фонт</th><th>Хэвлэл, дэлгэц</th><th>Сошиал пост (1080 px)</th></tr></thead><tbody><tr><td class=k>Гарчиг 1</td><td>GS 900 · том үсэг</td><td>96 px</td><td>120–250 px</td></tr><tr><td class=k>Гарчиг 2</td><td>GS 900 · том үсэг</td><td>46 px</td><td>80–110 px</td></tr><tr><td class=k>Дэд гарчиг</td><td>GS 800</td><td>28 px</td><td>40–56 px</td></tr><tr><td class=k>Үндсэн бичвэр</td><td>G 400 · мөр 1.5</td><td>17 px</td><td>28–36 px</td></tr><tr><td class=k>Тайлбар</td><td>G 700 · том үсэг · 0.2em</td><td>12.5 px</td><td>≥ 20 px</td></tr></tbody></table></div></div>
+<div class="tw"><table class="t"><thead><tr><th>Түвшин</th><th>Фонт</th><th>Tracking</th><th>Leading</th><th>Хэвлэл, дэлгэц</th><th>Сошиал пост (1080 px)</th></tr></thead><tbody><tr><td class=k>Display · гарчиг 1</td><td>GS 900</td><td class=nums>−0.02em</td><td class=nums>1.1–1.2</td><td class=nums>96 px</td><td class=nums>120–250 px</td></tr><tr><td class=k>h2 · гарчиг 2</td><td>GS 900 · том үсэг</td><td class=nums>−0.01em</td><td class=nums>1.1–1.2</td><td class=nums>46 px</td><td class=nums>80–110 px</td></tr><tr><td class=k>h3 · дэд гарчиг</td><td>GS 800</td><td class=nums>−0.01em</td><td class=nums>1.1–1.2</td><td class=nums>28 px</td><td class=nums>40–56 px</td></tr><tr><td class=k>Body · үндсэн бичвэр</td><td>G 400</td><td class=nums>0</td><td class=nums>1.5–1.6</td><td class=nums>17 px</td><td class=nums>28–36 px</td></tr><tr><td class=k>Eyebrow · тайлбар</td><td>G 700 · том үсэг</td><td class=nums>+0.06–0.08em</td><td class=nums>1.3</td><td class=nums>12.5 px</td><td class=nums>≥ 20 px</td></tr></tbody></table></div></div>
 <div class="block"><span class="cap">Бичвэр</span><h3>Бичвэрийн дүрэм</h3><div class="tw"><table class="t"><thead><tr><th>Төрөл</th><th>Зөв</th><th>Буруу</th></tr></thead><tbody><tr><td class=k>Брэндийн нэр</td><td><div class="pair"><span class="mk ok" aria-label="Зөв"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2"/></svg></span><b>Эрээнээс MGL карго</b></div></td><td><div class="pair"><span class="mk no" aria-label="Буруу"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 6.2l11.6 11.6M17.8 6.2 6.2 17.8"/></svg></span><span>Ereen Deh Mgl Kargo</span></div></td></tr><tr><td class=k>Салбар</td><td><div class="pair"><span class="mk ok" aria-label="Зөв"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2"/></svg></span><b>Дархан салбар</b></div></td><td><div class="pair"><span class="mk no" aria-label="Буруу"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 6.2l11.6 11.6M17.8 6.2 6.2 17.8"/></svg></span><span>Darkhan Busiin Cargo</span></div></td></tr><tr><td class=k>Огноо</td><td><div class="pair"><span class="mk ok" aria-label="Зөв"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2"/></svg></span><b>2026.10.05 · 10.05</b></div></td><td><div class="pair"><span class="mk no" aria-label="Буруу"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 6.2l11.6 11.6M17.8 6.2 6.2 17.8"/></svg></span><span>10/5, 2026-10-5</span></div></td></tr><tr><td class=k>Цаг</td><td><div class="pair"><span class="mk ok" aria-label="Зөв"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2"/></svg></span><b>09:00–19:00</b></div></td><td><div class="pair"><span class="mk no" aria-label="Буруу"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 6.2l11.6 11.6M17.8 6.2 6.2 17.8"/></svg></span><span>9-19ц</span></div></td></tr><tr><td class=k>Утас</td><td><div class="pair"><span class="mk ok" aria-label="Зөв"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2"/></svg></span><b>9900-0000 · +976 9900-0000</b></div></td><td><div class="pair"><span class="mk no" aria-label="Буруу"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 6.2l11.6 11.6M17.8 6.2 6.2 17.8"/></svg></span><span>99000000</span></div></td></tr><tr><td class=k>Үнэ</td><td><div class="pair"><span class="mk ok" aria-label="Зөв"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2"/></svg></span><b>2,500₮ · 350,000₮</b></div></td><td><div class="pair"><span class="mk no" aria-label="Буруу"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 6.2l11.6 11.6M17.8 6.2 6.2 17.8"/></svg></span><span>2500 төг, 2.5 мянга</span></div></td></tr><tr><td class=k>Нэгж</td><td><div class="pair"><span class="mk ok" aria-label="Зөв"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2"/></svg></span><b>12 кг · 0.08 м³ · 3–5 хоног</b></div></td><td><div class="pair"><span class="mk no" aria-label="Буруу"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 6.2l11.6 11.6M17.8 6.2 6.2 17.8"/></svg></span><span>12KG, 0.08m3</span></div></td></tr><tr><td class=k>Хашилт</td><td><div class="pair"><span class="mk ok" aria-label="Зөв"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2"/></svg></span><b>„Эрээнээс MGL карго“</b></div></td><td><div class="pair"><span class="mk no" aria-label="Буруу"><svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 6.2l11.6 11.6M17.8 6.2 6.2 17.8"/></svg></span><span>"Эрээнээс MGL карго"</span></div></td></tr></tbody></table></div>
 <ul class="list"><li>Том үсгийг зөвхөн гарчиг, шошгонд. Бүтэн өгүүлбэрийг том үсгээр бичихгүй.</li><li>Монгол үгийг латинаар бичихгүй. Зөвхөн „MGL“, URL, хэрэглэгчийн нэр латинаар.</li></ul></div>
+<div id="type-rules">
+<div class="block" id="type-tokens"><span class="cap">Токен <span class="badge-new">Шинэ</span></span><h3>Дүрэм бол CSS token</h3><p class="lede2">Kerning, tracking, leading, text-wrap, тоо, touch target бүгд <span class="tok">:root</span> дээрх хувьсагч. Доорх жишээ эдгээр токеныг шууд хэрэглэнэ.</p>
+<div class="tw"><table class="t"><thead><tr><th>Токен</th><th>Утга</th><th>Хаана</th></tr></thead><tbody>
+<tr><td class=k><span class="tok">--kerning</span></td><td class=nums>normal</td><td>Body, UI · metric kerning</td></tr>
+<tr><td class=k><span class="tok">--kerning-display</span></td><td class=nums>normal</td><td>Display · optical kerning-тэй хамт</td></tr>
+<tr><td class=k><span class="tok">--render-display</span></td><td>optimizeLegibility</td><td>Display optical kerning</td></tr>
+<tr><td class=k><span class="tok">--track-display</span></td><td class=nums>−0.02em</td><td>Display гарчиг</td></tr>
+<tr><td class=k><span class="tok">--track-h</span></td><td class=nums>−0.01em</td><td>h2–h3</td></tr>
+<tr><td class=k><span class="tok">--track-body</span></td><td class=nums>0</td><td>Body</td></tr>
+<tr><td class=k><span class="tok">--track-cap</span></td><td class=nums>+0.08em</td><td>Uppercase шошго, eyebrow</td></tr>
+<tr><td class=k><span class="tok">--track-cap-min</span></td><td class=nums>+0.06em</td><td>Eyebrow-ийн доод хязгаар</td></tr>
+<tr><td class=k><span class="tok">--track-small</span></td><td class=nums>+0.01em</td><td>14px-ээс жижиг энгийн бичвэр</td></tr>
+<tr><td class=k><span class="tok">--lead-head</span></td><td class=nums>1.15</td><td>Гарчиг · 1.1–1.2</td></tr>
+<tr><td class=k><span class="tok">--lead-body</span></td><td class=nums>1.6</td><td>Body · 1.5–1.6</td></tr>
+<tr><td class=k><span class="tok">--measure</span></td><td class=nums>65ch</td><td>Мөрийн дээд урт</td></tr>
+<tr><td class=k><span class="tok">--wrap-head</span></td><td>balance</td><td>Гарчиг · text-wrap</td></tr>
+<tr><td class=k><span class="tok">--wrap-body</span></td><td>pretty</td><td>Догол мөр · widow үгүй</td></tr>
+<tr><td class=k><span class="tok">--nums</span></td><td>tabular-nums</td><td>Үнэ, жин, огноо, утас, tracking, хүснэгт</td></tr>
+<tr><td class=k><span class="tok">--touch</span></td><td class=nums>44px</td><td>Гар утасны touch target</td></tr>
+</tbody></table></div></div>
+<div class="block" id="type-space"><span class="cap">Зай</span><h3>Kerning ба tracking</h3><p class="lede2">Kerning нь хос үсгийн зайг хэлбэрт нь тааруулна. Tracking (letter-spacing) нь бүх үсэгт жигд нэмэгдэнэ. Хоёрыг холихгүй.</p>
+<div class="grid g2">
+<div class="card"><span class="cap">Kerning</span>
+<div class="kern-pair" style="margin-top:12px"><p class="display kern-off" style="font-size:clamp(40px,7vw,64px);letter-spacing:normal">AVATAR</p><p class="note">font-kerning: none</p><p class="display metric" style="font-size:clamp(40px,7vw,64px);letter-spacing:normal">AVATAR</p><p class="note">normal · metric · tracking 0. A–V, A–T ойртоно.</p></div>
+<p class="display" style="font-size:clamp(28px,4vw,48px);margin-top:16px">ЭРЭЭНЭЭС</p>
+<p class="note">Display · optical kerning. CSS-д <span class="tok">optical</span> утга байхгүй тул <span class="tok">font-kerning: normal</span> ба <span class="tok">text-rendering: optimizeLegibility</span>. Зөвхөн том display гарчигт. Body дээр optimizeLegibility бүү тавь.</p>
+</div>
+<div class="card"><span class="cap">Tracking</span>
+<div class="track-stack" style="margin-top:10px">
+<p class="display" style="font-size:clamp(32px,4vw,44px)">Эрээнээс</p><p class="note tok">display · var(--track-display) · −0.02em</p>
+<p class="h-sample">Эрээнээс танд</p><p class="note tok">h2–h3 · var(--track-h) · −0.01em</p>
+<p class="body-sample">Эрээнээс танд хүртэл.</p><p class="note tok">body · var(--track-body) · 0</p>
+<p class="kicker">Эрээнээс MGL</p><p class="note tok">eyebrow · var(--track-cap) · +0.08em</p>
+<p class="kicker" style="letter-spacing:var(--track-cap-min)">Эрээнээс MGL</p><p class="note tok">eyebrow доод хязгаар · +0.06em</p>
+<p class="t-small">Эрээнээс танд хүртэл · 13px</p><p class="note tok">small · var(--track-small) · +0.01em</p>
+</div></div></div>
+<ul class="list"><li>Display −0.02em. h2, h3 −0.01em. Body 0.</li><li>Uppercase шошго, eyebrow: +0.06em-ээс +0.08em. Энэ хязгаараас бүү гарга.</li><li>14px-ээс жижиг энгийн бичвэр +0.01em. Eyebrow дээр хоёуланг нь бүү нэм.</li><li>Том үсгийг зөвхөн гарчиг, шошгонд. Бүтэн өгүүлбэрийг tracking-ээр сунгахгүй.</li></ul></div>
+<div class="block" id="type-lead"><span class="cap">Мөр</span><h3>Leading ба text-wrap</h3><p class="lede2">Leading (line-height) гарчигт 1.1–1.2, body-д 1.5–1.6. Мөр ~65ch-ээс урт болохгүй. Гарчиг <span class="tok">text-wrap: balance</span>, догол мөр <span class="tok">text-wrap: pretty</span> — widow (мөрийн адагт ганц үг) үлдээхгүй.</p>
+<div class="grid g2">
+<div class="card"><span class="cap">text-wrap: balance</span>
+<p class="display" style="font-size:clamp(28px,4vw,42px);max-width:11ch;margin-top:10px">Ачаа Эрээнээс таны салбар хүртэл</p>
+<p class="note" style="margin-top:8px">Гарчиг · leading <span class="tok">var(--lead-head)</span> · 1.15. Хоёр мөр ойролцоо урттай.</p></div>
+<div class="card"><span class="cap">Widow · буруу</span>
+<p class="widow">Ачаа таны салбарт<br>бууна.</p>
+<p class="note">Ганц үг дараагийн мөрд үлдэнэ. Pretty wrap ба гар аргаар засна. Хэвлэлд <span class="tok">widows: 2; orphans: 2</span>.</p></div></div>
+<div class="card" style="margin-top:16px"><span class="cap">text-wrap: pretty · 65ch</span>
+<p class="measure" style="margin-top:10px">Ачаа Эрээнээс хөдөлсөн цагаас таны салбарт буух хүртэл бид хариуцна. Үнэ, жин, огноо, утсыг ил тод, нэг мөрөөр харуулна. Урт мөр нүд ядраадаг тул body энэ хэмжээнээс хэтрэхгүй.</p>
+<p class="note" style="margin-top:8px">max-width: <span class="tok">var(--measure)</span> · 65ch нь дээд хязгаар. Гар утсанд мөр аяндаа богиносно. Leading <span class="tok">var(--lead-body)</span> · 1.6.</p></div></div>
+<div class="block" id="type-nums"><span class="cap">Тоо</span><h3>Tabular nums</h3><p class="lede2">Үнэ, жин, огноо, утас, tracking code, хүснэгт — <span class="tok">font-variant-numeric: tabular-nums</span> (<span class="tok">var(--nums)</span>). Багана зэрэгцэнэ. Пропорциональ тоо жагсаалтад бүү ашигла.</p>
+<div class="grid g2">
+<div><span class="cap">proportional-nums · буруу</span><div class="tw" style="margin-top:8px"><table class="t tsm propnums"><thead><tr><th>Төрөл</th><th class=numr>Утга</th></tr></thead><tbody><tr><td>Үнэ</td><td class=numr>2,500₮</td></tr><tr><td>Үнэ</td><td class=numr>18,750₮</td></tr><tr><td>Үнэ</td><td class=numr>350,000₮</td></tr><tr><td>Жин</td><td class=numr>108 кг</td></tr><tr><td>Огноо</td><td class=numr>2026.11.18</td></tr><tr><td>Утас</td><td class=numr>8811-2233</td></tr><tr><td>Tracking</td><td class=numr>EE-241118-1008</td></tr></tbody></table></div></div>
+<div><span class="cap">tabular-nums · зөв</span><div class="tw" style="margin-top:8px"><table class="t tsm"><thead><tr><th>Төрөл</th><th class=numr>Утга</th></tr></thead><tbody><tr><td>Үнэ</td><td class=numr>2,500₮</td></tr><tr><td>Үнэ</td><td class=numr>18,750₮</td></tr><tr><td>Үнэ</td><td class=numr>350,000₮</td></tr><tr><td>Жин</td><td class=numr>108 кг</td></tr><tr><td>Огноо</td><td class=numr>2026.11.18</td></tr><tr><td>Утас</td><td class=numr>8811-2233</td></tr><tr><td>Tracking</td><td class=numr>EE-241118-1008</td></tr></tbody></table></div></div></div></div>
+<div class="block" id="type-touch"><span class="cap">Хүрэлт</span><h3>Touch target</h3><p class="lede2">Гар утсанд товч, цэс, текст талбарын өндөр дор хаяж 44px — <span class="tok">min-height: var(--touch)</span>. Checkbox-ын шошготой мөр нь 44px байж болно; 22px тэмдэг дангаараа бай биш.</p>
+<div class="card"><div class="touch-demo">
+<span class="touch-box" role="img" aria-label="44 пикселийн хэмжээ"></span>
+<button type="button" class="btn pri">Салбар руу</button>
+<label class="touch-field">Салбар<input type="text" value="Дархан салбар" readonly></label>
+</div>
+<p class="note" style="margin-top:12px">Тасархай дөрвөлжин = 44×44px. 640px-ээс нарийн дэлгэцэнд товч, цэс, текст талбар энэ өндрөөс доош орохгүй.</p></div></div>
+<div class="block" id="type-blueprint"><span class="cap">Дэвсгэр <span class="badge-new">Шинэ</span></span><h3>Blueprint grid</h3><p class="lede2">Нарийн blueprint grid ба contour lines — зөвхөн CSS, зургийн файлгүй. Гарчиг, story-ийн хоосон тал, хэсгийн ард. Бичвэрийн урт догол мөрийн ард биш.</p>
+<div class="grid g2">
+<div class="blueprint"><div class="bp-copy"><span class="cap">Blueprint · contour</span><p class="display">Маршрут</p><p>Тор бүдэг, contour ирмэг дээр. Төвд гарчиг цэвэр үлдэнэ.</p></div></div>
+<div class="blueprint on-light"><div class="bp-copy"><span class="cap">Цайвар цаас</span><p class="display">Эрээнээс</p><p>Цайвар дэвсгэр дээр шугам бүр нарийн. Бичвэр хөхөөр.</p></div></div></div>
+<ul class="list"><li>Шугамын алхам <span class="tok">var(--blueprint-grid)</span> · 24px. Өнгө <span class="tok">--blueprint-line</span>, контур <span class="tok">--blueprint-contour</span>.</li><li>Контурыг ирмэг рүү, гарчгийг цэвэр төвд. Жижиг бичвэрийг шугам дээр бүү тавь.</li><li>Хөдөлгөөн, GIF, видео бүү нэм. Нэг CSS дэвсгэр — дахин татах зураг байхгүй.</li></ul></div>
+<div class="block" id="type-dither"><span class="cap">Зураг</span><h3>Dither ба ASCII</h3><p class="lede2">Dither болон ASCII spot нь редакцийн зураг, хэсэг тусгаарлагч, постын дэвсгэр. Лого, 24px icon, UI тэмдгийг ингэж бүү зур.</p>
+<div class="grid g2">
+<figure class="card fig"><span class="cap">Зөв · contrast, хэмжээ</span>
+<div class="dither-stage" style="margin-top:10px"><svg class="dither-svg" viewBox="0 0 440 200" role="img" aria-label="Dither хэв маягийн ачааны машин"><defs><pattern id="bb-dither" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="1.6" height="1.6" fill="currentColor"/></pattern></defs><g fill="url(#bb-dither)"><rect x="28" y="48" width="210" height="92" rx="4"/><path d="M238 78h78l48 40v22H238z"/></g><g fill="currentColor"><circle cx="108" cy="156" r="18"/><circle cx="108" cy="156" r="7" fill="var(--ground)"/><circle cx="318" cy="156" r="18"/><circle cx="318" cy="156" r="7" fill="var(--ground)"/></g></svg></div>
+<figcaption><b>Хөх цэг, цайвар цаас</b>Өргөн хамгийн багадаа <span class="tok">var(--dither-min)</span> 240px, ихдээ <span class="tok">var(--dither-max)</span> 440px. Дугуй цул, их бие dither.</figcaption></figure>
+<figure class="card fig"><span class="cap">Буруу · contrast, хэмжээ</span>
+<div class="dither-stage bad" style="margin-top:10px"><svg class="dither-svg dither-bad" viewBox="0 0 440 200" aria-hidden="true"><defs><pattern id="bb-dither-bad" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="1.6" height="1.6" fill="currentColor"/></pattern></defs><g fill="url(#bb-dither-bad)"><rect x="28" y="48" width="210" height="92" rx="4"/><path d="M238 78h78l48 40v22H238z"/></g></svg></div>
+<figcaption><b>Саарал дээр саарал, 72px</b>Дунд саарал дээр дунд саарал уншигдахгүй. 240px-ээс жижиг dither бүү ашигла. Жижиг бичвэрийг дээр нь бүү тавь.</figcaption></figure></div>
+<figure class="card fig" style="margin-top:16px"><span class="cap">ASCII · monospace</span>
+<pre class="ascii" style="margin-top:10px">+-------------------------------+
+|                               |
+|      .  : + # # + :  .        |
+|    . : + # # # # # + : .      |
+|      .  : + # # + :  .        |
+|                               |
++-------------------------------+</pre>
+<figcaption style="margin-top:10px"><b>Эрээнээс MGL · ачааны spot</b>ASCII нь monospace, <span class="tok">var(--ascii-size)</span> 13px, tracking +0.01em. Кирилл үсгийг зургийн дотор бүү шахаж бич — өргөн нь зөрдөг. Нэрийг доор нь Geologica-гаар тавь. Leading 1.2 нь зөвхөн энэ торонд, body leading биш.</figcaption></figure>
+<ul class="list"><li>Хэзээ: редакцийн spot, хэсэг тусгаарлагч, story-ийн дэвсгэр. Лого, замын тэмдэг, цэсийн icon биш.</li><li>Контраст: хөх дээр цайвар, эсвэл цайвар дээр хөх. Саарал дээр саарал болохгүй.</li><li>Гүйцэтгэл: нэг SVG <span class="tok">pattern</span> эсвэл <span class="tok">pre</span>. Бүтэн дэлгэцийн canvas, <span class="tok">feTurbulence</span> шүүлтүүр, мянган цэг бүү. Хэмжээ ихсэх тусам цэг олширно — 440px-ээс бүү томруул.</li></ul></div>
+</div>
 </section><section class="chapter" id="ch05" aria-labelledby="ch05-t">
 <header class="ch-head"><div class="ch-num" aria-hidden="true">05</div><div><h2 id="ch05-t">График элемент</h2><p class="lede">Маршрутын шугам бол логоос гадна бидний хамгийн хүчтэй таних тэмдэг. Хээ, дүрс тэмдэг, гэрэл зургийн хэв маяг нь бүх материалыг нэг гэр бүл болгоно.</p></div></header>
 <div class="block"><span class="cap">Маршрут</span><h3>Маршрутын шугам</h3><p class="lede2">Эхлэл нь үргэлж Эрээн (цагираг), төгсгөл нь харилцагч эсвэл салбар (сум, цэг).</p>
