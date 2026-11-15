@@ -1,19 +1,8 @@
 {
   "name": "brandbook2.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "build": "node scripts/build-qr.js",
-    "test": "node --test",
-    "lint": "node --check lib/branch-qr.js && node --check test/branch-qr.test.js && node --check test/templates.test.js && node --check scripts/build-qr.js && node --check js/router.js && node --check js/branch-qr.js"
-  },
-  "dependencies": {
-    "@vercel/blob": "~2.8.0",
-    "@vercel/functions": "^3.9.11",
-    "qrcode": "^1.5.4"
-  },
-  "devDependencies": {
-    "esbuild": "^0.25.12",
-    "jsqr": "^1.4.0"
+    "build": "echo 'redirect-only: brandbook moved to ereeneesmglcargo repo'",
+    "test": "node -e \"JSON.parse(require('fs').readFileSync('vercel.json','utf8'))\""
   }
 }
