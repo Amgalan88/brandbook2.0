@@ -47,13 +47,15 @@ test('known branch names map to stable slugs', () => {
     assert.equal(slugFromName(b.name + ' салбар'), b.slug);
     assert.equal(shortUrl(b.slug), `https://www.ereeneesmglcargo.mn/q/${b.slug}`);
   }
-  assert.equal(slugFromName('ДАРХАН САЛБАР'), 'darkhan');
+  assert.equal(slugFromName('ДАРХАН САЛБАР'), 'darhan');
+  assert.equal(slugFromName('Нисэх'), 'niseh');
+  assert.equal(new Set(BRANCHES.map((b) => b.slug)).size, BRANCHES.length);
 });
 
 test('slug field accepts a typed override and rejects junk', () => {
   assert.equal(shortUrl(' Erdenet '), 'https://www.ereeneesmglcargo.mn/q/erdenet');
   assert.equal(shortUrl('Яармаг'), '');
-  assert.equal(slugFromName('Баянхонгор'), 'bayankhongor');
+  assert.equal(slugFromName('Баянхонгор'), 'bayanhongor');
   assert.equal(normalizeSlug('erdenet-', true), 'erdenet-');
   assert.equal(normalizeSlug('erdenet-'), 'erdenet');
   assert.equal(shortUrl('erdenet-2'), 'https://www.ereeneesmglcargo.mn/q/erdenet-2');
@@ -69,12 +71,12 @@ test('SVG QR encodes the exact short URL', () => {
 });
 
 test('error correction is M, matching the qrcode library', () => {
-  const url = 'https://www.ereeneesmglcargo.mn/q/darkhan';
+  const url = 'https://www.ereeneesmglcargo.mn/q/darhan';
   const model = qrModel(url);
   const lib = QRCode.create(url, { errorCorrectionLevel: 'M' });
   assert.equal(model.ecl, QR_ECL);
   assert.equal(model.n, lib.modules.size);
   assert.equal(model.level, 'M');
   assert.equal(decode(qrSvg(url)), url);
-  assert.equal(decode(qrSvg('https://www.ereeneesmglcargo.mn/q/yarmag-1')), 'https://www.ereeneesmglcargo.mn/q/yarmag-1');
+  assert.equal(decode(qrSvg('https://www.ereeneesmglcargo.mn/q/niseh-yarmag')), 'https://www.ereeneesmglcargo.mn/q/niseh-yarmag');
 });
