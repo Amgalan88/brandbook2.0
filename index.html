@@ -136,7 +136,7 @@ main{min-width:0;max-width:var(--col)}
 .mybranch{margin-top:28px;background:rgba(255,255,255,.07);border-radius:16px;padding:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:12px;align-items:end;position:relative}
 .mybranch label{display:grid;gap:6px;font:700 11.5px/1.2 var(--f-body);letter-spacing:var(--track-cap);text-transform:uppercase;color:var(--panel-mut)}
 .mybranch input[type=text]{font:600 16px var(--f-body);padding:11px 12px;border-radius:10px;border:1.5px solid rgba(188,208,240,.35);background:rgba(4,30,66,.55);color:var(--panel-ink);width:100%;min-width:0}
-.mybranch .hint{font-size:13px;color:var(--panel-mut);max-width:220px;line-height:1.4;letter-spacing:var(--track-small)}
+.mybranch .hint{font-size:13px;color:var(--panel-mut);max-width:62ch;line-height:1.4;letter-spacing:var(--track-small);text-transform:none}
 @media (max-width:760px){.mybranch{grid-template-columns:minmax(0,1fr)}.mybranch .hint{max-width:none}}
 /* chapters */
 .chapter{padding-top:86px}
@@ -437,10 +437,17 @@ body.is-studio{background:#e4edf8}
 #branch{background:#002D72;color:#F6EFE3;border-radius:18px;padding:18px}
 #branch h2,#branch .ws-lead{color:#F6EFE3}
 #branch .ws-lead{color:#BCD0F0}
-#mybranch.mybranch{grid-template-columns:repeat(3,minmax(0,1fr))}
 .qr-live{background:#fff;color:#002D72;border-radius:16px;padding:10px;width:min(100%,180px)}
 .qr-live svg{width:100%;height:auto;display:block}
-.qr-live small{display:block;text-align:center;font-size:11px;line-height:1.35;margin-top:4px}
+.qr-live small{display:block;text-align:center;font-size:11px;line-height:1.35;margin-top:4px;letter-spacing:0;text-transform:none}
+.qr-live .qr-url{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qr-live .qr-ph{min-height:148px;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px 12px;font:700 14px/1.35 var(--f-body);letter-spacing:0;text-transform:none;color:#002D72}
+#gen-form small.field-error,.mybranch small.field-error{display:block;color:#FFD7A8;opacity:1;font:700 13px/1.35 var(--f-body);letter-spacing:0;text-transform:none}
+label.req .req-name::after{content:" *";color:#FF8200}
+input[aria-invalid="true"]{border-color:#ff8f80!important}
+#mybranch.mybranch{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+#mybranch label.site-field,#mybranch .hint{grid-column:1 / -1}
+#gen-form label.wide{grid-column:1 / -1}
 .go-fill{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;margin:8px 0 14px;border-radius:999px;background:#002D72;color:#F6EFE3;font-weight:800;text-decoration:none}
 .logo-specimens{display:grid;grid-template-columns:1.4fr .8fr .6fr;gap:12px;margin:12px 0}
 .logo-specimens svg{width:100%;height:84px;background:#F6EFE3;border-radius:12px;padding:12px;box-sizing:border-box}
@@ -552,11 +559,11 @@ body.is-studio textarea{min-height:88px}
     <option value="Чулуун-Овоо">Чулуун-Овоо</option>
   </select></label>
   <label for="mb-branch">Таны салбар<input id="mb-branch" type="text" data-shared-input="branch" autocomplete="off" list="branch-names"></label>
-  <label for="mb-slug">Slug<input id="mb-slug" type="text" data-shared-input="slug" autocomplete="off" spellcheck="false" autocapitalize="none"></label>
+  <label class="req site-field" for="mb-site"><span class="req-name">Вэб сайтын холбоос</span><input id="mb-site" type="text" inputmode="url" data-shared-input="site" placeholder="https://erdenet.aicargo.mn" autocomplete="off" spellcheck="false" autocapitalize="none" aria-required="true"><small class="field-error" data-site-error role="alert" hidden></small></label>
   <datalist id="branch-names"><option value="Дархан"><option value="Эрдэнэт"><option value="Эрдэнэт Шуурхай карго"><option value="Эрдэнэт 4-р хороолол"><option value="Багануур"><option value="Булган Хутаг-Өндөр"><option value="Ховд"><option value="Нисэх"><option value="Нисэх Гарден хотхон"><option value="Нисэх Яармаг"><option value="Яармаг Хангарди Сити 2"><option value="100 айл"><option value="10-р хороолол"><option value="1-р хороолол"><option value="Хороолол 3, 4 Дүүхээ"><option value="Хорооллын хойд тал"><option value="21"><option value="22-ын товчоо"><option value="5-р сургууль"><option value="805"><option value="Батоник"><option value="Баруун салаа 4"><option value="Дөлгөөн нуур"><option value="Жуков"><option value="Кино үйлдвэр"><option value="Моносын уулзвар"><option value="Модны 2"><option value="Налайх"><option value="Натур"><option value="Улиастай"><option value="Урт цагаан"><option value="Хан-Уул 19"><option value="ТБД Андууд"><option value="Төмөр зам"><option value="Төмөр зам Ганзам"><option value="Толгойт Их Наран"><option value="Цайз"><option value="Цирк"><option value="Чулуун-Овоо"></datalist>
   <label for="mb-phone">Утас<input id="mb-phone" type="text" data-shared-input="phone" autocomplete="off"></label>
   <label for="mb-addr">Хаяг<input id="mb-addr" type="text" data-shared-input="address" autocomplete="off"></label>
-  <p class="hint">Нэрнээс slug үүснэ. QR: www.ereeneesmglcargo.mn/q/slug</p>
+  <p class="hint">QR энэ холбоосыг шууд уншина. Салбарын нэр зөвхөн карт дээрх бичвэрт орно.</p>
   <div class="qr-live" id="mb-qr" aria-label="Салбарын QR"></div>
 </form>
 <p><a class="go-fill" href="/studio#branch">Салбар, QR бөглөх →</a></p>
@@ -994,12 +1001,12 @@ body.is-studio textarea{min-height:88px}
     </nav>
     <section class="ws-sec" id="branch">
       <h2>Салбар ба QR</h2>
-      <p class="ws-lead">Slug нь байнгын богино холбоос. QR уншуулахад тухайн салбарын сайт нээгдэнэ.</p>
+      <p class="ws-lead">Салбарын нэр карт дээрх бичвэрт орно. QR нь доор бичсэн вэб холбоосыг шууд уншина.</p>
       <div data-mount="branch"></div>
     </section>
     <section class="ws-sec" id="tpl">
       <h2>Загвар бөглөх</h2>
-      <p class="ws-lead">Нэрийн хуудас H01–H02, нугалбар H03–H04, пост. QR нь H02, H03, H04 дээр, хамгийн багадаа 20×20 мм.</p>
+      <p class="ws-lead">Нэрийн хуудас H01–H02, нугалбар H03–H04, пост. H02, H03, H04 дээрх QR нь вэб холбоосыг шууд уншина, хамгийн багадаа 20×20 мм.</p>
       <div data-mount="tpl"></div>
     </section>
     <div data-mount="logos"></div>
@@ -1737,18 +1744,49 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     }
   };
 
-  function branchShortUrl(d) {
+  const SITE_FIELD = { k: 'site', label: 'Вэб сайтын холбоос', def: '', required: true, wide: true, placeholder: 'https://erdenet.aicargo.mn', hint: 'Жишээ: https://erdenet.aicargo.mn. QR энэ холбоосыг шууд уншина.' };
+
+  function siteState(raw) {
     const QR = window.MGLQR;
-    if (!QR || !d) return '';
-    const slug = QR.normalizeSlug(d.slug || '') || QR.slugFromName(d.branch || '');
-    return QR.shortUrl(slug);
+    if (!QR) return { ok: false, empty: !String(raw || '').trim(), url: '', display: '', error: 'Холбоос оруулна уу' };
+    return QR.normalizeWebsite(raw);
   }
 
   // White rounded tile, quiet zone inside, navy modules. Spots are replayed as vectors in the PDF.
-  function qrBlock(ctx, url, x, y, size, o) {
+  function qrPlaceholder(ctx, x, y, size) {
+    const radius = Math.min(size * 0.08, size * 0.06);
+    ctx.save();
+    ctx.fillStyle = '#FFFFFF';
+    rr(ctx, x, y, size, size, radius);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,45,114,.28)';
+    ctx.lineWidth = Math.max(1.25, size * 0.015);
+    rr(ctx, x + ctx.lineWidth, y + ctx.lineWidth, size - ctx.lineWidth * 2, size - ctx.lineWidth * 2, radius);
+    ctx.stroke();
+    const label = (window.MGLQR && MGLQR.QR_PLACEHOLDER) || 'Холбоос оруулна уу';
+    const cut = label.indexOf(' ');
+    const lines = cut < 0 ? [label] : [label.slice(0, cut), label.slice(cut + 1)];
+    const maxW = size * 0.78;
+    let s = Math.max(11, Math.round(size * 0.092));
+    while (s > 9 && lines.some(ln => measure(ctx, ln, { w: 700, s: s, sharp: false }) > maxW)) s -= 1;
+    const lh = s * 1.25;
+    let ty = y + (size - lines.length * lh) / 2 + s * 0.82;
+    lines.forEach(ln => {
+      txt(ctx, ln, x + size / 2, ty, { w: 700, s: s, sharp: false, align: 'center', color: '#002D72' });
+      ty += lh;
+    });
+    ctx.restore();
+  }
+
+  function qrBlock(ctx, raw, x, y, size, o) {
     o = o || {};
     const QR = window.MGLQR;
-    if (!url || !QR) return y + size;
+    const state = siteState(raw);
+    if (!state.ok || !QR) {
+      qrPlaceholder(ctx, x, y, size);
+      return y + size;
+    }
+    const url = state.url;
     const model = QR.qrModel(url);
     const quiet = 4;
     const m = size / (model.n + quiet * 2);
@@ -1772,18 +1810,21 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     const urlSize = o.urlSize || 11;
     const capY = y + size + capSize + 6;
     txt(ctx, QR.QR_CAPTION, cx, capY, { w: 800, s: capSize, sharp: false, align: 'center', color: o.capColor || '#002D72' });
-    const shown = url.replace(/^https:\/\//, '');
-    const lines = wrap(ctx, shown, o.textW || size, { w: 600, s: urlSize, sharp: false, breakLong: true });
-    lines.forEach((ln, i) => {
-      txt(ctx, ln, cx, capY + 4 + (i + 1) * (urlSize + 3), { w: 800, s: urlSize, sharp: false, align: 'center', color: o.urlColor || '#002D72' });
-    });
-    return capY + lines.length * (urlSize + 4);
+    const urlO = { w: 600, s: urlSize, sharp: false };
+    const maxW = o.textW || size;
+    let n = (state.display || url).length;
+    let cap = QR.websiteCaption(url, n);
+    while (n > 8 && measure(ctx, cap, urlO) > maxW) {
+      n -= 1;
+      cap = QR.websiteCaption(url, n);
+    }
+    txt(ctx, cap, cx, capY + 4 + urlSize + 3, { w: 800, s: urlSize, sharp: false, align: 'center', color: o.urlColor || '#002D72' });
+    return capY + urlSize + 8;
   }
 
   T.card_back = {
-    name: 'Нэрийн хуудас · ар', code: 'H02', w: 960, h: 560, mm: { w: 96, h: 56, bleed: 3 }, print: true,
-    fields: [{ k: 'branch', label: 'Салбарын нэр', def: 'Дархан' },
-      { k: 'slug', label: 'Салбарын slug', def: 'darhan', hint: 'Богино холбоос: www.ereeneesmglcargo.mn/q/энэ. Нэрээс автоматаар бөглөгдөнө.' },
+    name: 'Нэрийн хуудас · ар', code: 'H02', w: 960, h: 560, mm: { w: 96, h: 56, bleed: 3 }, print: true, qr: true,
+    fields: [SITE_FIELD, { k: 'branch', label: 'Салбарын нэр', def: 'Дархан' },
       { k: 'pname', label: 'Овог нэр', def: 'Б. Болормаа' },
       { k: 'prole', label: 'Албан тушаал', def: 'Салбарын эрхлэгч' },
       { k: 'phone', label: 'Утас', def: '9900-0000' },
@@ -1810,7 +1851,7 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
         lines.forEach((l, k) => txt(ctx, l, X + 40, y + k * 26, o));
         y += 42 + (lines.length - 1) * 26;
       });
-      qrBlock(ctx, branchShortUrl(d), qrX, qrY, qrSize, { capColor: C.dorange, urlColor: C.navy, capSize: 15, urlSize: 12, textW: qrSize + 8 });
+      qrBlock(ctx, d.site, qrX, qrY, qrSize, { capColor: C.dorange, urlColor: C.navy, capSize: 15, urlSize: 12, textW: qrSize + 8 });
       route(ctx, X, 900, 470, 30, C.orange, C.orange, 'dot');
       txt(ctx, 'Эрээн', X, 518, { w: 700, s: 16, sharp: false, track: 0.2, upper: true, color: C.navy });
       txt(ctx, (d.branch || '') + ' салбар', 900, 518, { w: 700, s: 16, sharp: false, track: 0.2, upper: true, align: 'right', color: C.dorange });
@@ -1824,12 +1865,11 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
   function foldMarks(ctx) { ctx.save(); ctx.strokeStyle = 'rgba(0,0,0,.12)'; ctx.setLineDash([6, 6]); ctx.lineWidth = 1; [1, 2].forEach(i => { ctx.beginPath(); ctx.moveTo(panelX(i), 0); ctx.lineTo(panelX(i), BH); ctx.stroke(); }); ctx.restore(); }
 
   T.bro_out = {
-    name: 'Нугалбар · гадна', code: 'H03', w: BW, h: BH, mm: { w: 303, h: 216, bleed: 3 }, print: true,
-    fields: [{ k: 'branch', label: 'Салбарын нэр', def: 'Дархан' }, { k: 'kg', label: '1 кг үнэ (₮)', def: '2,500' }, { k: 'm3', label: '1 м³ үнэ (₮)', def: '350,000' },
+    name: 'Нугалбар · гадна', code: 'H03', w: BW, h: BH, mm: { w: 303, h: 216, bleed: 3 }, print: true, qr: true,
+    fields: [SITE_FIELD, { k: 'branch', label: 'Салбарын нэр', def: 'Дархан' }, { k: 'kg', label: '1 кг үнэ (₮)', def: '2,500' }, { k: 'm3', label: '1 м³ үнэ (₮)', def: '350,000' },
       { k: 'days', label: 'Хугацаа (хоног)', def: '3–5' }, { k: 'note', label: 'Нэмэлт нөхцөл', def: 'Хэврэг, том оврын ачааны үнийг салбараас тодруулна.' },
       { k: 'address', label: 'Хаяг', def: 'Хуучин хороолол, 21-р байр' }, { k: 'phone', label: 'Утас', def: '9900-0000' },
-      { k: 'hours', label: 'Ажлын цаг', def: 'Даваа–Бямба · 09:00–19:00' }, { k: 'social', label: 'Facebook', def: 'facebook.com/ereeneesmgl.darkhan' },
-      { k: 'slug', label: 'Салбарын slug', def: 'darhan', hint: 'Богино холбоос: www.ereeneesmglcargo.mn/q/энэ. Нэрээс автоматаар бөглөгдөнө.' }],
+      { k: 'hours', label: 'Ажлын цаг', def: 'Даваа–Бямба · 09:00–19:00' }, { k: 'social', label: 'Facebook', def: 'facebook.com/ereeneesmgl.darkhan' }],
     draw(ctx, d) {
       bg(ctx, BW, BH, C.cream);
       // panel 1 — tariff (cream)
@@ -1873,7 +1913,7 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       const qSize = 104; // 26 mm at 4 px/mm
       const qx = panelX(2) - 32 - qSize;
       const qy = BH - 18 - qSize - 56;
-      qrBlock(ctx, branchShortUrl(d), qx, qy, qSize, { capColor: C.sky, urlColor: C.cream, capSize: 13, urlSize: 11, textW: qSize + 28 });
+      qrBlock(ctx, d.site, qx, qy, qSize, { capColor: C.sky, urlColor: C.cream, capSize: 13, urlSize: 11, textW: qSize + 28 });
       // panel 3 — cover
       ctx.fillStyle = C.navy; ctx.fillRect(panelX(2), 0, BW - panelX(2), BH);
       pattern(ctx, panelX(2), 0, BW - panelX(2), BH, C.sky, 0.07, 120);
@@ -1883,14 +1923,14 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       txt(ctx, 'танд хүртэл.', x, 540, { w: 600, s: 30, sharp: false, color: C.cream });
       route(ctx, x, x + 240, 600, 20, C.orange, C.orange, 'arrow');
       const cSize = 96; // 24 mm at 4 px/mm, on the outside cover
-      qrBlock(ctx, branchShortUrl(d), panelX(3) - 36 - cSize, 640, cSize, { capColor: C.sky, urlColor: C.cream, capSize: 12, urlSize: 10, textW: cSize + 8 });
+      qrBlock(ctx, d.site, panelX(3) - 36 - cSize, 640, cSize, { capColor: C.sky, urlColor: C.cream, capSize: 12, urlSize: 10, textW: cSize + 8 });
       foldMarks(ctx);
     }
   };
 
   T.bro_in = {
-    name: 'Нугалбар · дотор', code: 'H04', w: BW, h: BH, mm: { w: 303, h: 216, bleed: 3 }, print: true,
-    fields: [{ k: 'branch', label: 'Салбарын нэр', def: 'Дархан' }, { k: 'slug', label: 'Салбарын slug', def: 'darhan', hint: 'Богино холбоос: www.ereeneesmglcargo.mn/q/энэ. Нэрээс автоматаар бөглөгдөнө.' }, { k: 'days', label: 'Хугацаа (хоног)', def: '3–5' },
+    name: 'Нугалбар · дотор', code: 'H04', w: BW, h: BH, mm: { w: 303, h: 216, bleed: 3 }, print: true, qr: true,
+    fields: [SITE_FIELD, { k: 'branch', label: 'Салбарын нэр', def: 'Дархан' }, { k: 'days', label: 'Хугацаа (хоног)', def: '3–5' },
       { k: 'banned', label: 'Хүлээж авахгүй бараа', def: 'Шатамхай бодис, шингэн, эм, хүнс, бэлэн мөнгө' },
       { k: 'track', label: 'Ачаа шалгах арга', def: 'Утасны дугаараар салбараас эсвэл мессежээр' },
       { k: 'phone', label: 'Утас', def: '9900-0000' }],
@@ -1903,7 +1943,7 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       para(ctx, 'Эрээнээс MGL карго бол Эрээн хотоос Монгол даяарх салбарууд руу ачаа тээвэрлэдэг нэгдсэн сүлжээ. Аль ч салбараас ачаагаа авсан ижил үйлчилгээ, ижил стандарт.', x, 262, PW - 88, { w: 500, s: 17, sharp: false, color: C.navy, lh: 1.5 });
       const inSize = 88; // 22 mm at 4 px/mm, inside contact panel
       const inX = panelX(1) - 40 - inSize;
-      qrBlock(ctx, branchShortUrl(d), inX, 400, inSize, { capColor: C.dorange, urlColor: C.navy, capSize: 13, urlSize: 11, textW: 230 });
+      qrBlock(ctx, d.site, inX, 400, inSize, { capColor: C.dorange, urlColor: C.navy, capSize: 13, urlSize: 11, textW: 230 });
       ctx.fillStyle = C.orange; ctx.fillRect(x + 12, 560, 5, 130);
       [['Эрээн', 560, C.navy], [(d.branch || '') + ' салбар', 690, C.dorange]].forEach((r, i) => {
         if (i === 0) { ctx.beginPath(); ctx.arc(x + 14, r[1], 13, 0, Math.PI * 2); ctx.moveTo(x + 14 + 6, r[1]); ctx.arc(x + 14, r[1], 6, 0, Math.PI * 2, true); ctx.fillStyle = C.orange; ctx.fill(); }
@@ -2160,15 +2200,54 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
 
   // ------------------------------------------------------------ shared branch data
   const today = (() => { const d = new Date(); return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`; })();
-  const SHARED_KEYS = ['branch', 'suffix', 'slug', 'phone', 'address', 'date'];
+  const SHARED_KEYS = ['branch', 'suffix', 'site', 'phone', 'address', 'date'];
   const storedShared = LS.get('shared', null);
-  const shared = Object.assign({ branch: 'Дархан', suffix: 'салбар', slug: '', phone: '9900-0000', address: 'Хуучин хороолол, 21-р байр', date: today }, storedShared || {});
-  if (!storedShared || !storedShared.slug) shared.slug = (window.MGLQR && MGLQR.slugFromName(shared.branch)) || 'darhan';
+  const shared = Object.assign({ branch: 'Дархан', suffix: 'салбар', site: '', phone: '9900-0000', address: 'Хуучин хороолол, 21-р байр', date: today }, storedShared || {});
+  try {
+    const remembered = localStorage.getItem('mgl2:site');
+    if (remembered != null) shared.site = remembered;
+  } catch (e) { /* ignore */ }
   if (!LS.get('shared', null)) shared.date = today;
   const perTpl = LS.get('tpl', {});
   const subs = new Set();
   function onShared(fn) { subs.add(fn); fn(shared); }
-  function setShared(k, v) { shared[k] = v; LS.set('shared', shared); subs.forEach(fn => fn(shared)); }
+  let siteTouched = false;
+  function setShared(k, v) {
+    shared[k] = v;
+    LS.set('shared', shared);
+    if (k === 'site') { try { localStorage.setItem('mgl2:site', v); } catch (e) { /* ignore */ } }
+    subs.forEach(fn => fn(shared));
+  }
+  function syncSiteErrors(force) {
+    const QR = window.MGLQR;
+    const state = QR ? QR.normalizeWebsite(shared.site) : { ok: false, empty: !String(shared.site || '').trim(), url: '', error: 'Холбоос оруулна уу' };
+    const reveal = force || siteTouched;
+    $$('[data-site-error]').forEach(err => {
+      const input = err.parentElement && err.parentElement.querySelector('input');
+      if (!reveal || state.ok || state.empty) {
+        err.hidden = true;
+        err.textContent = '';
+        if (input) input.removeAttribute('aria-invalid');
+      } else {
+        err.hidden = false;
+        err.textContent = state.error || 'Зөв вэб холбоос бичнэ үү. Жишээ: https://erdenet.aicargo.mn';
+        if (input) input.setAttribute('aria-invalid', 'true');
+      }
+    });
+    return state;
+  }
+  function commitSite(inp) {
+    siteTouched = true;
+    const QR = window.MGLQR;
+    if (!QR || !inp) { syncSiteErrors(true); return; }
+    const state = QR.normalizeWebsite(inp.value);
+    if (state.ok && inp.value !== state.url) {
+      inp.value = state.url;
+      setShared('site', state.url);
+      return;
+    }
+    syncSiteErrors(true);
+  }
   function branchFull(d) { d = d || shared; return `${(d.branch || '').trim()} ${d.suffix || 'салбар'}`.trim(); }
   function tagOf(d) { const b = (d.branch || '').replace(/[\s\-–.]/g, ''); return d.suffix === 'төв агуулах' ? '#' + b + 'ТөвАгуулах' : '#' + b + 'Салбар'; }
 
@@ -2177,14 +2256,17 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     const el = document.getElementById('mb-qr');
     const QR = window.MGLQR;
     if (!el || !QR) return;
-    const slug = QR.normalizeSlug(d.slug || '') || QR.slugFromName(d.branch || '');
-    const url = QR.shortUrl(slug);
-    el.innerHTML = url
-      ? QR.qrSvg(url) + '<small>' + QR.QR_CAPTION + '</small><small class="qr-url">' + url.replace(/^https:\/\//, '') + '</small>'
-      : '<small>Slug бичнэ үү</small>';
+    const state = QR.normalizeWebsite(d.site || '');
+    const label = QR.QR_PLACEHOLDER;
+    const cut = label.indexOf(' ');
+    const tile = cut < 0 ? esc(label) : esc(label.slice(0, cut)) + '<br>' + esc(label.slice(cut + 1));
+    el.innerHTML = state.ok
+      ? QR.qrSvg(state.url) + '<small>' + QR.QR_CAPTION + '</small><small class="qr-url">' + esc(state.display) + '</small>'
+      : '<div class="qr-ph">' + tile + '</div>';
   }
   onShared(d => {
     paintBranchQr(d);
+    syncSiteErrors(false);
     $$('[data-bind]').forEach(el => {
       const t = el.dataset.tpl.replace(/\{branch\}/g, d.branch || '').replace(/\{full\}/g, branchFull(d)).replace(/\{phone\}/g, d.phone || '').replace(/\{address\}/g, d.address || '').replace(/\{tag\}/g, tagOf(d));
       el.textContent = t;
@@ -2231,16 +2313,22 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       if (!('suffix' in o)) o.suffix = shared.suffix;
       if (!('phone' in o)) o.phone = shared.phone;
       if (!('address' in o)) o.address = shared.address;
-      o.slug = shared.slug || (window.MGLQR && MGLQR.slugFromName(shared.branch)) || '';
+      if (!('site' in o)) o.site = shared.site || '';
       return o;
     }
     function fieldHTML(f, v) {
       const id = 'f-' + f.k;
-      const hint = f.hint ? `<small>${esc(f.hint)}</small>` : '';
+      const hint = f.hint ? `<small class="hint">${esc(f.hint)}</small>` : '';
+      const err = f.k === 'site' ? '<small class="field-error" data-site-error role="alert" hidden></small>' : '';
       const sh = SHARED_KEYS.includes(f.k) ? ' data-shared="1"' : '';
-      if (f.type === 'select') return `<label for="${id}">${esc(f.label)}<select id="${id}" name="${f.k}"${sh}>${f.opts.map(o => `<option${o === v ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select>${hint}</label>`;
-      if (f.type === 'area') return `<label for="${id}">${esc(f.label)}<textarea id="${id}" name="${f.k}" rows="4"${sh}>${esc(v)}</textarea>${hint}</label>`;
-      return `<label for="${id}">${esc(f.label)}<input id="${id}" name="${f.k}" type="text" value="${esc(v)}" autocomplete="off"${sh}>${hint}</label>`;
+      const cls = [f.required ? 'req' : '', f.wide ? 'wide' : ''].filter(Boolean).join(' ');
+      const req = cls ? ` class="${cls}"` : '';
+      const name = f.required ? `<span class="req-name">${esc(f.label)}</span>` : esc(f.label);
+      const ph = f.placeholder ? ` placeholder="${esc(f.placeholder)}"` : '';
+      const extra = f.k === 'site' ? ' inputmode="url" spellcheck="false" autocapitalize="none" aria-required="true"' : '';
+      if (f.type === 'select') return `<label for="${id}"${req}>${name}<select id="${id}" name="${f.k}"${sh}>${f.opts.map(o => `<option${o === v ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select>${hint}</label>`;
+      if (f.type === 'area') return `<label for="${id}"${req}>${name}<textarea id="${id}" name="${f.k}" rows="4"${sh}>${esc(v)}</textarea>${hint}${err}</label>`;
+      return `<label for="${id}"${req}>${name}<input id="${id}" name="${f.k}" type="text" value="${esc(v)}" autocomplete="off"${extra}${ph}${sh}>${hint}${err}</label>`;
     }
     function buildForm() {
       const t = M.T[cur], v = vals(cur);
@@ -2249,6 +2337,7 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       meta.innerHTML = `<b>${t.code}</b> · ${esc(t.name)} · ${t.print ? `${t.mm.w - 2 * t.mm.bleed}×${t.mm.h - 2 * t.mm.bleed} мм + ${t.mm.bleed} мм bleed` : `${t.w}×${t.h} px`}`;
       $('#gen-pdf').hidden = !t.print;
       $$('.tpl-pick').forEach(b => b.setAttribute('aria-pressed', b.dataset.key === cur ? 'true' : 'false'));
+      syncSiteErrors(false);
     }
     let raf = 0;
     function draw() {
@@ -2264,21 +2353,11 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
     }
     form.addEventListener('input', e => {
       const el = e.target; if (!el.name) return;
-      if (el.name === 'slug' && window.MGLQR) {
-        const v = MGLQR.normalizeSlug(el.value, true);
-        if (el.value !== v) el.value = v;
-        setShared('slug', v);
-      } else if (el.dataset.shared) {
-        setShared(el.name, el.value);
-        if (el.name === 'branch' && window.MGLQR) {
-          const slug = MGLQR.slugFromName(el.value) || '';
-          setShared('slug', slug);
-          const s = form.querySelector('[name="slug"]');
-          if (s && s !== document.activeElement) s.value = slug;
-        }
-      } else { perTpl[cur] = perTpl[cur] || {}; perTpl[cur][el.name] = el.value; LS.set('tpl', perTpl); }
+      if (el.dataset.shared) setShared(el.name, el.value);
+      else { perTpl[cur] = perTpl[cur] || {}; perTpl[cur][el.name] = el.value; LS.set('tpl', perTpl); }
       draw();
     });
+    form.addEventListener('focusout', e => { if (e.target && e.target.name === 'site') commitSite(e.target); });
     form.addEventListener('change', e => { if (e.target.tagName === 'SELECT') form.dispatchEvent(new Event('input', { bubbles: true })); });
     form.addEventListener('submit', e => e.preventDefault());
     function select(key, scroll) {
@@ -2306,7 +2385,20 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
       } finally { busy(b, false); }
     });
     $('#gen-pdf').addEventListener('click', async e => {
-      const b = e.currentTarget; busy(b, true);
+      const b = e.currentTarget;
+      const t0 = M.T[cur];
+      if (t0.qr) {
+        const state = syncSiteErrors(true);
+        if (!state.ok) {
+          siteTouched = true;
+          syncSiteErrors(true);
+          toast(state.empty ? 'Холбоос оруулна уу. PDF гаргахын өмнө вэб сайтын холбоос бичнэ.' : (state.error || 'Зөв вэб холбоос бичнэ үү.'));
+          const input = form.querySelector('[name="site"]') || document.getElementById('mb-site');
+          if (input) input.focus();
+          return;
+        }
+      }
+      busy(b, true);
       try {
         await loadScript(JSPDF);
         const t = M.T[cur], c2 = document.createElement('canvas');
@@ -2674,26 +2766,17 @@ window.GLYPHS={"GS900":{"upem":2000,"cap":1400,"d":{"А":"M-3 0 507 -1400H987L14
   }
 
   // ------------------------------------------------------------ shared inputs (branch quick bar)
-  $$('[data-shared-input]').forEach(inp => {
+    $$('[data-shared-input]').forEach(inp => {
     const k = inp.dataset.sharedInput;
     onShared(d => { if (document.activeElement !== inp) inp.value = d[k] || ''; });
-    inp.addEventListener('input', () => {
-      if (k === 'slug' && window.MGLQR) {
-        const v = MGLQR.normalizeSlug(inp.value, true);
-        if (inp.value !== v) inp.value = v;
-        setShared('slug', v);
-        return;
-      }
-      setShared(k, inp.value);
-      if (k === 'branch' && window.MGLQR) setShared('slug', MGLQR.slugFromName(inp.value) || '');
-    });
+    inp.addEventListener('input', () => { setShared(k, inp.value); });
+    if (k === 'site') inp.addEventListener('focusout', () => commitSite(inp));
   });
   const branchPick = document.getElementById('mb-pick');
   if (branchPick) {
     branchPick.addEventListener('change', () => {
-      if (!branchPick.value || !window.MGLQR) return;
+      if (!branchPick.value) return;
       setShared('branch', branchPick.value);
-      setShared('slug', MGLQR.slugFromName(branchPick.value));
     });
     onShared(d => {
       if (document.activeElement === branchPick) return;

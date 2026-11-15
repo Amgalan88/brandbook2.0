@@ -40,6 +40,21 @@ test('guide and studio are separate routes and old hashes are mapped', () => {
   assert.ok(sources.includes('/studio'));
 });
 
+test('print QR uses the typed website URL and not a short link', () => {
+  assert.match(html, /Вэб сайтын холбоос/);
+  assert.match(html, /https:\/\/erdenet\.aicargo\.mn/);
+  assert.match(html, /Холбоос оруулна уу/);
+  assert.match(html, /normalizeWebsite/);
+  assert.match(html, /mgl2:site/);
+  assert.match(html, /if \(t0\.qr\)/);
+  assert.equal(html.includes('shortUrl'), false);
+  assert.equal(html.includes('/q/<slug>'), false);
+  assert.equal(html.includes('www.ereeneesmglcargo.mn/q/'), false);
+  assert.match(html, /qr: true/);
+  const qrTemplates = ['card_back', 'bro_out', 'bro_in'];
+  for (const key of qrTemplates) assert.match(html, new RegExp(`T\\.${key} = \\{[\\s\\S]*?qr: true`));
+});
+
 test('access middleware and feedback API are unchanged entry points', () => {
   assert.match(middleware, /export default async function middleware/);
   assert.match(middleware, /\/__unlock/);
