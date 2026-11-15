@@ -12,7 +12,7 @@
 ## Вэб болгох (Vercel, нэвтрэх кодтой)
 
 1. [vercel.com/new](https://vercel.com/new) → энэ repo-г **Import**
-2. **Framework Preset:** Other. Build Command, Output Directory-г хоосон үлдээнэ → **Deploy**
+2. **Framework Preset:** Other → **Deploy**. `vercel.json` build-ээр зөвхөн QR багцыг шинэчилж, файлуудыг repo-ийн үндсээс өгнө.
 3. Сайт нээгдэхэд эхлээд нэвтрэх код асууна. Код зөв бол 30 хоног дахин асуухгүй.
 
 Код шалгах ажлыг `middleware.js` (Vercel Routing Middleware) сервер талд хийдэг. Тиймээс хуудас, зураг, видео, PDF аль нь ч код оруулахгүйгээр нээгдэхгүй. Анхны код нь `BB0808`.
