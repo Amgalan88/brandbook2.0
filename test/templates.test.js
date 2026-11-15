@@ -12,10 +12,9 @@ test('print templates place a local QR of at least 20 mm', () => {
   assert.equal(html.includes('api.qrserver.com'), false);
   assert.match(html, /js\/branch-qr\.js/);
   assert.match(html, /const qrSize = 220/); // card, 10 px/mm → 22 mm
-  assert.match(html, /const qSize = 104/); // brochure contact, 4 px/mm → 26 mm
-  assert.match(html, /const cSize = 96/); // brochure cover, 4 px/mm → 24 mm
+  assert.match(html, /const qSize = 104/); // H03 contact panel, 4 px/mm → 26 mm
   assert.match(html, /const inSize = 88/); // brochure inside, 4 px/mm → 22 mm
-  for (const px of [220, 104, 96, 88]) {
+  for (const px of [220, 104, 88]) {
     const mm = px >= 200 ? px / 10 : px / 4;
     assert.ok(mm >= 20, `${px}px is ${mm}mm`);
   }
@@ -38,6 +37,27 @@ test('guide and studio are separate routes and old hashes are mapped', () => {
   const sources = vercel.rewrites.map((r) => r.source);
   assert.ok(sources.includes('/guide'));
   assert.ok(sources.includes('/studio'));
+});
+
+test('print QR uses the typed website URL and not a short link', () => {
+  assert.match(html, /Вэб сайтын холбоос/);
+  assert.match(html, /https:\/\/erdenet\.aicargo\.mn/);
+  assert.match(html, /Холбоос оруулна уу/);
+  assert.match(html, /normalizeWebsite/);
+  assert.match(html, /mgl2:site/);
+  assert.match(html, /if \(t0\.qr\)/);
+  assert.equal(html.includes('shortUrl'), false);
+  assert.equal(html.includes('/q/<slug>'), false);
+  assert.equal(html.includes('www.ereeneesmglcargo.mn/q/'), false);
+  assert.match(html, /qr: true/);
+  const qrTemplates = ['card_back', 'bro_out', 'bro_in'];
+  for (const key of qrTemplates) assert.match(html, new RegExp(`T\\.${key} = \\{[\\s\\S]*?qr: true`));
+  const h03 = html.slice(html.indexOf('T.bro_out = {'), html.indexOf('T.bro_in = {'));
+  assert.equal((h03.match(/qrBlock\(/g) || []).length, 1);
+  assert.match(h03, /const qSize = 104/);
+  assert.match(h03, /logo\(ctx, 'seal'/);
+  assert.equal(h03.includes('cSize'), false);
+  assert.equal(h03.includes('panel 3 — cover, no QR'), true);
 });
 
 test('access middleware and feedback API are unchanged entry points', () => {

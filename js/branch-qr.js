@@ -2116,19 +2116,23 @@ var MGLQR = (() => {
     QR_DARK: () => QR_DARK,
     QR_ECL: () => QR_ECL,
     QR_LIGHT: () => QR_LIGHT,
+    QR_PLACEHOLDER: () => QR_PLACEHOLDER,
     QUIET_MODULES: () => QUIET_MODULES,
-    SHORT_ORIGIN: () => SHORT_ORIGIN,
+    SITE_ERROR: () => SITE_ERROR,
     normalizeSlug: () => normalizeSlug,
+    normalizeWebsite: () => normalizeWebsite,
     qrModel: () => qrModel,
     qrSvg: () => qrSvg,
-    shortUrl: () => shortUrl,
-    slugFromName: () => slugFromName
+    slugFromName: () => slugFromName,
+    websiteCaption: () => websiteCaption,
+    websiteQrText: () => websiteQrText
   });
   var import_qrcode = __toESM(require_browser(), 1);
-  var SHORT_ORIGIN = "https://www.ereeneesmglcargo.mn/q/";
   var QR_DARK = "#002D72";
   var QR_LIGHT = "#FFFFFF";
   var QR_CAPTION = "\u0423\u043D\u0448\u0443\u0443\u043B\u0430\u0430\u0434 \u0441\u0430\u0439\u0442 \u0440\u0443\u0443 \u043E\u0440\u043D\u043E";
+  var QR_PLACEHOLDER = "\u0425\u043E\u043B\u0431\u043E\u043E\u0441 \u043E\u0440\u0443\u0443\u043B\u043D\u0430 \u0443\u0443";
+  var SITE_ERROR = "\u0417\u04E9\u0432 \u0432\u044D\u0431 \u0445\u043E\u043B\u0431\u043E\u043E\u0441 \u0431\u0438\u0447\u043D\u044D \u04AF\u04AF. \u0416\u0438\u0448\u044D\u044D: https://erdenet.aicargo.mn";
   var QR_ECL = "M";
   var QUIET_MODULES = 4;
   var BRANCHES = [
@@ -2232,10 +2236,61 @@ var MGLQR = (() => {
     }
     return normalizeSlug(out);
   }
-  function shortUrl(slug) {
-    const s = normalizeSlug(slug);
-    if (!s) return "";
-    return SHORT_ORIGIN + s;
+  function invalidSite() {
+    return { ok: false, empty: false, url: "", display: "", error: SITE_ERROR };
+  }
+  function normalizeWebsite(raw) {
+    const trimmed = String(raw != null ? raw : "").trim();
+    if (!trimmed) return { ok: false, empty: true, url: "", display: "", error: "" };
+    if (/[\s\u0000-\u001f]/.test(trimmed) || trimmed.startsWith("//")) return invalidSite();
+    let scheme = "https";
+    let body = trimmed;
+    const schemeMatch = trimmed.match(/^([a-z][a-z0-9+.-]*):\/\//i);
+    if (schemeMatch) {
+      scheme = schemeMatch[1].toLowerCase();
+      if (scheme !== "http" && scheme !== "https") return invalidSite();
+      body = trimmed.slice(schemeMatch[0].length);
+    } else if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) {
+      return invalidSite();
+    }
+    if (!body || body.startsWith("/") || body.startsWith(".")) return invalidSite();
+    const url = scheme + "://" + body;
+    let parsed;
+    try {
+      parsed = new URL(url);
+    } catch (e) {
+      return invalidSite();
+    }
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return invalidSite();
+    if (parsed.username || parsed.password) return invalidSite();
+    const host = parsed.hostname;
+    if (!host || host.startsWith(".") || host.endsWith(".")) return invalidSite();
+    const ipv4 = /^(?:\d{1,3}\.){3}\d{1,3}$/.test(host);
+    if (ipv4) {
+      if (host.split(".").some((n) => Number(n) > 255)) return invalidSite();
+    } else if (host !== "localhost" && !host.includes(":")) {
+      if (!/^(?:[a-z0-9-]{1,63}\.)+[a-z0-9-]{2,63}$/i.test(host)) return invalidSite();
+    }
+    return { ok: true, empty: false, url, display: websiteCaption(url), error: "" };
+  }
+  function websiteCaption(url, max = 36) {
+    const s = String(url || "").replace(/^https?:\/\//i, "").replace(/\/$/, "");
+    const limit = Number(max) > 0 ? Number(max) : s.length;
+    if (s.length <= limit) return s;
+    if (limit <= 1) return "\u2026";
+    const keep = limit - 1;
+    const head = Math.max(1, Math.ceil(keep * 0.62));
+    const tail = Math.max(0, keep - head);
+    return s.slice(0, head) + "\u2026" + (tail ? s.slice(-tail) : "");
+  }
+  function websiteQrText(raw) {
+    const site = normalizeWebsite(raw);
+    if (!site.ok) {
+      const err = new Error(site.empty ? QR_PLACEHOLDER : site.error);
+      err.code = site.empty ? "empty" : "invalid";
+      throw err;
+    }
+    return site.url;
   }
   function qrModel(text) {
     const url = String(text || "").trim();
